@@ -1,0 +1,197 @@
+font-family: 'Open Sans', sans-serif;
+font-family: 'Roboto Slab', serif;
+
+html{
+    margin: 0;
+    height: 100%;
+}
+
+body {
+
+    background-image: url(../img/bg/pod_conv.jpg), url(../img/bg/pod_h.png), url(../img/bg/pod_v.png);
+    background-position: -10000px -10000px, -10000px -10000px, -10000px -10000px;
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    background-attachment: fixed;
+    font-family:  'Roboto Slab', serif;
+    background-color: rgb(4, 4, 4);
+    color: white;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    -webkit-text-size-adjust: none;
+
+    /*overflow: hidden;*/
+
+    /*color: #000000;
+    font-family: Open Sans,sans-serif;
+    font-size: 12px;
+    background-color: #000;
+    background: #ffffff;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    
+    position:absolute; top:0; bottom:0; right:0; left:0;*/
+}
+
+main {
+    height: 100%;
+    overflow: hidden;
+}
+
+#logo, #logo-click-area {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 0px;
+        height: 0px;
+        opacity: 1;
+
+    }
+
+    #logo-click-area {
+        cursor: pointer;
+    }
+
+    #pre-block, #post-block1, #post-block2, #post-block3, #post-block4 {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        text-align: center;
+        opacity: 0;
+    }
+
+    #particles-container {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    #particles {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        width: 100vw;
+        height: 300vw;
+    }
+    
+    #post-block3 {
+        color: rgb(0, 252, 254);
+    }
+
+    #post-block3 .hashtag {
+        /* color: white; */
+    }
+    
+    #post-block4 input[type="email"], #post-block4 input[type="submit"] {
+        box-sizing: border-box;
+        border: 1px solid rgb(0, 252, 254);
+        font-family: inherit;
+        font-size: inherit;
+        padding: 0.2em;
+        color: rgb(51, 52, 56);
+        margin: 0px;
+    }
+
+    #post-block4 input[type="email"] {
+        width: 13em;
+    }
+    
+    #post-block4 input[type="submit"] {
+        background-color: rgb(0, 252, 254);
+        text-transform: uppercase;
+        padding-left: 1em;
+        padding-right: 1em;
+        margin: 0px;
+    }
+    
+    ::-webkit-input-placeholder { /* Chrome */
+        color: rgb(230, 230, 230);
+    }
+    :-ms-input-placeholder { /* IE 10+ */
+        color: rgb(230, 230, 230);
+    }
+    ::-moz-placeholder { /* Firefox 19+ */
+        color: rgb(230, 230, 230);
+        opacity: 1;
+    }
+    :-moz-placeholder { /* Firefox 4 - 18 */
+        color: rgb(230, 230, 230);
+        opacity: 1;
+    }
+
+    input, textarea {
+      -webkit-appearance: none;
+      -webkit-border-radius: 0;
+    }
+
+#header {
+    z-index: 10000;
+}
+
+#webGLContent {
+    position: fixed;
+    display:block;
+    top:0px;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    /*background: #f3f3f3;  For browsers that do not support gradients 
+    background-color: #f3f3f3;*/
+    overflow: visible;
+    pointer-events: none;
+}
+
+.pageClass {
+    width: 100%;
+    height: 100vh;
+    z-index: 1;
+}
+
+#pag2 {
+    background-image: url(../img/bg/section2bg.jpg);
+    background-position: center;
+    position: relative;
+}
+
+.left-coin-text {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 5vw; bottom: 0; 
+    width: 35vw;
+    height: 25vw;
+    /*
+    margin-left: 5vw;
+   
+    position: relative;*/
+}
+
+#main {
+    height: 100%;
+    overflow: hidden;
+}
+
+#txtTitl {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 1;
+    color: rgb(0, 252, 254);
+}
+
+#mainTxt {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 1;
+}
+
+.container{
+    height: 100%;
+}

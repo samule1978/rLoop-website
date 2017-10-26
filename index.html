@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=1, user-scalable=0"></meta>
+    <title>rLoop</title>  
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,800&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet"  property="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="css/preload.css"></link>
+    <!-- <link rel="stylesheet" type="text/css" href="css/progressbar-style.css" /> -->
+
+    <!-- jQuery library -->
+    <script src="lib/jQuery/jquery-2.2.4.min.js"></script>
+    <script src="lib/jQuery/jquery.sticky.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/main.css"></link>
+    <script type="text/javascript" src="lib/scrollMagic/ScrollMagic.min.js"></script>  
+    <script data-main="js/" src="lib/requirejs/require.js"></script>
+    <script src="lib/requirejs/PackageLoader.js"></script> 
+    <script type="text/javascript" src="js/preloaded.js"></script>
+</head>
+
+<body id="body">
+    <div id='preloadScreen'>
+        <div id='preloadInMiddle'>
+            <div id='logoinMiddle'></div>
+            <div id='preloadBar'>
+                <div id='preloadFill'></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="header">
+        <div id="logoCont">
+            <svg id="logo" version="1.1" viewBox="0 0 211 111" xmlns="http://www.w3.org/2000/svg"><g transform="matrix(1.3333 0 0 -1.3333 -35.839 123.04)"><g transform="translate(46.317 68.953)"><path d="m0 0h-9.719c-4.681 0-9.719-3.345-9.719-10.691v-21.382c0-1.61 1.305-2.916 2.916-2.916 1.61 0 2.915 1.306 2.915 2.916v21.382c0 4.509 2.976 4.86 3.888 4.86h9.719c1.61 0 2.916 1.305 2.916 2.915 0 1.611-1.306 2.916-2.916 2.916" fill="#fff"/></g><g transform="translate(84.222 70.897)"><path d="m0 0c-10.182 0-18.466-8.284-18.466-18.466s8.284-18.466 18.466-18.466 18.466 8.284 18.466 18.466-8.284 18.466-18.466 18.466m0-31.101c-6.967 0-12.635 5.668-12.635 12.635s5.668 12.635 12.635 12.635 12.635-5.668 12.635-12.635-5.668-12.635-12.635-12.635" fill="#fff"/></g><g transform="translate(125.04 70.897)"><path d="m0 0c-10.182 0-18.466-8.284-18.466-18.466s8.284-18.466 18.466-18.466 18.466 8.284 18.466 18.466-8.284 18.466-18.466 18.466m0-31.101c-6.967 0-12.635 5.668-12.635 12.635s5.668 12.635 12.635 12.635 12.635-5.668 12.635-12.635-5.668-12.635-12.635-12.635" fill="#fff"/></g><g transform="translate(165.86 70.897)"><path d="m0 0c-10.164 0-18.466-8.302-18.466-18.466v-39.848c0-1.611 1.305-2.916 2.916-2.916 1.61 0 2.915 1.305 2.915 2.916 0 14.578 17.43 21.002 22.559 24.291 5.129 3.288 8.542 9.04 8.542 15.557 0 10.164-8.302 18.466-18.466 18.466m0-31.101c-7.013 0-12.635 5.622-12.635 12.635 0 7.012 5.622 12.635 12.635 12.635s12.635-5.623 12.635-12.635c0-7.013-5.622-12.635-12.635-12.635" fill="#fff"/></g><g transform="translate(62.394 39.789)"><path d="m0 0-0.462 7e-3c-1.332 0.065-2.008 1.047-2.008 2.916v40.82c0 6.418-5.231 8.747-8.747 8.747-1.61 0-2.916-1.305-2.916-2.915s1.306-2.916 2.916-2.916c0.877 0 2.916-0.284 2.916-2.916v-40.82c0-6.417 4.649-8.747 7.775-8.747l0.105 8e-3c1.606-0.116 3.002 1.092 3.118 2.697 0.117 1.607-1.091 3.003-2.697 3.119" fill="#fff"/></g><g transform="translate(165.86 59.234)"><path d="m0 0c3.757 0 6.803-3.046 6.803-6.803 0-3.758-3.046-6.804-6.803-6.804-3.758 0-6.803 3.046-6.803 6.804 0 3.757 3.045 6.803 6.803 6.803" fill="#fff"/></g><g transform="translate(165.73 47.575)"><path d="m0 0c2.726 0 4.943 2.217 4.943 4.943 0 2.725-2.217 4.942-4.943 4.942s-4.943-2.217-4.943-4.942c0-2.726 2.217-4.943 4.943-4.943" fill="#00fcff"/></g><g transform="translate(165.73 47.575)"><path d="m0 0c2.726 0 4.943 2.217 4.943 4.943 0 2.725-2.217 4.942-4.943 4.942s-4.943-2.217-4.943-4.942c0-2.726 2.217-4.943 4.943-4.943z" fill="none" stroke="#00fcff" stroke-width="4.5"/></g></g></svg>
+        </div>
+    </div>
+
+    <!-- <main role='main' id='main'> -->    
+    <div id='main'>
+        <div class='container'>
+            <div class="pageClass" id="pag1">
+                <div id="pre-block">
+                    for the
+                </div>
+                <div id="post-block1">
+                    rLoop is delivering the vision for the Hyperloop.
+                    Now you can be part of the engineering revolution.
+                </div>
+                <div id="post-block2">
+                    For over two years, we've created the world's top
+                    Hyperloop technology as a decentralised team.
+                    Now we are bringing the Hyperloop onto the Blockchain,
+                    allowing individuals to own and be part of the future.
+                </div>
+                <div id="post-block3">
+                    <span class="hashtag">#servetheloop</span> <br/>
+                    Join our email community to learn what comes next.
+                </div>
+                <div id="particles-container">
+                    <!-- <svg id="particles" viewBox="0 0 100 300"></svg> -->
+                </div>
+                <div id="logo-click-area" onClick="start_animation(1.5)"></div>
+                <div id="post-block4">
+                    <form action="https://rloop.us12.list-manage.com/subscribe/post" method="POST" id="subscribe">
+                        <input type="hidden" name="u" value="131680a7fd56be89b79329f9b">
+                        <input type="hidden" name="id" value="69fc70f978">
+                        <input type="email" autocapitalize="off" autocorrect="off" name="MERGE0" id="MERGE0" value="" placeholder="example@host.com"><!--
+                        --><input type="submit" name="submit" value="join">
+                    </form>
+                </div>
+            </div>
+
+            <div class="pageClass" id="pag2">
+                <div class="left-coin-text">
+                    <div id="txtTitl">rLoop Coin</div><br>
+                    <div id="mainTxt">The rCoin is the currency to power our network of minds and deliver our projects. The first project is in delivering the future of transportation, the Hyperloop.
+                    </div>
+                </div>
+            </div>
+            <!-- end page 1 -->
+        </div>
+    </div>
+    <!-- </main> -->
+
+    <!-- scena 3d -->
+    <div id="webGLContent"></div>
+
+    <!-- navigation -->
+    <div id="menuContent"></div>
+    <script type="text/javascript">jq=jQuery;</script>
+    <script type="x-shader/x-vertex" id="vertexshader">
+        attribute float alpha;
+        varying float vAlpha;
+        void main() {
+            vAlpha = alpha;
+            vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+            gl_PointSize = 8.0;
+            gl_Position = projectionMatrix * mvPosition;
+        }
+    </script>
+
+    <script type="x-shader/x-fragment" id="fragmentshader">
+        uniform vec3 color;
+        varying float vAlpha;
+        void main() {
+            gl_FragColor = vec4( color, vAlpha );
+        }
+    </script>
+
+    <script type="x-shader/x-vertex" id="vertexshaderP">
+
+        attribute float alpha;
+        attribute float size;
+        attribute vec3 customColor;
+        attribute vec2 aPoints;
+        uniform sampler2D texture;
+        varying vec3 vColor;
+        varying float vAlpha;
+
+        void main() {
+            vAlpha = alpha;
+            vColor = customColor;
+
+
+            vec4 pos=vec4(texture2D(texture,aPoints).xyz,1.0)+vec4(position,1.0);
+            //vec4 pos=vec4(position,1.0);
+            vec4 mvPosition =modelViewMatrix * pos;
+            gl_PointSize = size * ( 1000.0 / length( mvPosition.xyz ) );
+            gl_Position = projectionMatrix * mvPosition;
+
+        }
+
+
+    </script>
+
+    <script type="x-shader/x-fragment" id="fragmentshaderP">
+        #ifdef GL_ES
+        precision highp float;
+        #endif
+
+        uniform vec3 color;
+        uniform sampler2D texture_point;
+
+        varying vec3 vColor;
+        varying float vAlpha;
+
+        void main() {
+
+        gl_FragColor = vec4( color * vColor, vAlpha );
+        gl_FragColor = gl_FragColor * texture2D( texture_point, gl_PointCoord );
+        //gl_FragColor = vec4( color, vAlpha );
+
+        }
+
+
+    </script>
+   
+</body>
+</html>
+
