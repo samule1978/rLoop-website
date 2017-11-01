@@ -19,7 +19,7 @@ define([], function() {
         mobility = 1 - (1 / ratio - mob1h) / (mob0h - mob1h);
       }
       // mobility = 1;
-      // console.log(mobility);
+      //console.log(mobility);
       var w = mobility < 0 ? 1 / (1 - mobility) : 1,
           pad = 50 / w - 50;
       function len(num) {
@@ -147,7 +147,248 @@ define([], function() {
         ))
       });
 
-      
+      set_css('txtTitl3', {
+        lineHeight: 2.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('mainTxt3', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('bottomTxt3', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.4,
+          3.2,
+          mobility
+        ))
+      });
+
+      set_css('txtTitl5', {
+        lineHeight: 2.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('mainTxt5', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('bottomTxt5', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.4,
+          3.2,
+          mobility
+        ))
+      });
+
+      set_css('txtTitl4', {
+        lineHeight: 2.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('mainTxt4', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('bottomTxt4', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.4,
+          3.2,
+          mobility
+        ))
+      });
+
+      set_css('txtTitl6', {
+        lineHeight: 2.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('mainTxt6', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('mainTxt7', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('mainTxt8', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('mainTxt9', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('txtTitl10', {
+        lineHeight: 2.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('mainTxt10', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('bottomTxt10', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.4,
+          3.0,
+          mobility
+        ))
+      });
+
+      set_css('txtTitl11', {
+        lineHeight: 2.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('mainTxt11', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('bottomTxt11', {
+        lineHeight: 1.5,
+        fontSize: len(blend(
+          1.4,
+          3.0,
+          mobility
+        ))
+      });
+      set_css('bottomTxt211', {
+        lineHeight: 1.5,
+        fontSize: len(blend(
+          1.4,
+          3.0,
+          mobility
+        ))
+      });
+
+      set_css('txtTitl12', {
+        lineHeight: 2.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('mainTxt12', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('bottomTxt12', {
+        lineHeight: 1.5,
+        fontSize: len(blend(
+          1.4,
+          3.0,
+          mobility
+        ))
+      });
+
+      set_css('txtTitl13', {
+        lineHeight: 2.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('mainTxt13', {
+        lineHeight: 1.25,
+        fontSize: len(blend(
+          1.8,
+          3.7,
+          mobility
+        ))
+      });
+
+      set_css('bottomTxt13', {
+        lineHeight: 1.5,
+        fontSize: len(blend(
+          1.4,
+          3.0,
+          mobility
+        ))
+      });
+            
 
       var bg_w = len(blend(105, 140, mobility)),
           bg_h = len(blend(75, 110, mobility)),

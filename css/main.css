@@ -1,5 +1,8 @@
-font-family: 'Open Sans', sans-serif;
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab:300,400|Roboto:300,400');
+
+/*font-family: 'Open Sans', sans-serif;*/
 font-family: 'Roboto Slab', serif;
+font-family: 'Roboto', sans-serif;
 
 html{
     margin: 0;
@@ -139,6 +142,7 @@ main {
 
 #header {
     z-index: 10000;
+    position: fixed;
 }
 
 #webGLContent {
@@ -152,6 +156,26 @@ main {
     background-color: #f3f3f3;*/
     overflow: visible;
     pointer-events: none;
+}
+
+#watchVideoBtn {
+    margin-top: 3vh;
+}
+
+.btn-main {
+    padding: 1vh;
+    padding-right: 2vw;
+    padding-left: 2vw;
+    border-color: rgb(0, 252, 254);
+    border-width: 1px;
+    border-radius: 8px;
+    border-style: solid;
+    width: auto;
+    color: white;
+    position: absolute;
+    font-size: 0.9vw;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.41);
 }
 
 .pageClass {
@@ -171,11 +195,102 @@ main {
     position: absolute;
     top: 0; left: 5vw; bottom: 0; 
     width: 35vw;
-    height: 25vw;
+    height: 42vh;
     /*
     margin-left: 5vw;
    
     position: relative;*/
+}
+
+.left-world-text {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 5vw; bottom: 0; 
+    width: 37vw;
+    height: 50vh;
+    /*
+    margin-left: 5vw;
+   
+    position: relative;*/
+}
+
+.left-ppl-text {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 5vw; bottom: 0; 
+    width: 47vw;
+    height: 44vh;
+}
+
+.left-dots-text {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 5vw; bottom: 0; 
+    width: 37vw;
+    height: 40vh;
+}
+
+.left-dots2-text {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 5vw; bottom: 0; 
+    width: 43vw;
+    height: 36vh;
+}
+
+.left-dots3-text {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 5vw; bottom: 0; 
+    width: 54vw;
+    height: 49vh;
+}
+
+.left-dots4-text {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 5vw; bottom: 0; 
+    width: 54vw;
+    height: 49vh;
+}
+
+.left-speed-text {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 5vw; bottom: 0; 
+    width: 34vw;
+    height: 50vh;
+}
+
+.left-musk-text {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 5vw; bottom: 0; 
+    width: 50vw;
+    height: 45vh;
+}
+.left-cyl-text {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 5vw; bottom: 0; 
+    width: 49vw;
+    height: 57vh;
+}
+
+.left-partn-text {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 5vw; bottom: 0; 
+    width: 45vw;
+    height: 40vh;
+}
+
+.left-brain-text {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 5vw; bottom: 0; 
+    width: 49vw;
+    height: 59vh;
 }
 
 #coin {
@@ -195,6 +310,12 @@ main {
     display: block;
     top: calc((100vh - 23vw) / 2);
     left: calc((100vw - -17vw) / 2);
+
+    /*position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -100px;
+    margin-top: -200px;*/
 
     -webkit-transition: transform 0.8s;
     -moz-transition: transform 0.8s;
@@ -231,6 +352,309 @@ main {
     opacity: 0;
 }
 
+#txtTitl3 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    color: rgb(0, 252, 254);
+}
+
+#mainTxt3 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+}
+
+#bottomTxt3 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    font-family: 'Roboto Slab';
+    font-weight: 300;
+
+    margin-top: 3vh;
+    line-height: 1.25;
+    font-size: 1.4vw;
+    width: 30vw;
+}
+
+#txtTitl5 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    color: rgb(0, 252, 254);
+}
+
+#mainTxt5 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+}
+
+#bottomTxt5 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    font-family: 'Roboto Slab';
+    font-weight: 300;
+
+    margin-top: 4vh;
+    line-height: 1.25;
+    font-size: 1.4vw;
+    width: 40vw;
+}
+
+#txtTitl4 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    color: rgb(0, 252, 254);
+}
+
+#mainTxt4 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+}
+
+#bottomTxt4 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    font-family: 'Roboto Slab';
+    font-weight: 300;
+
+    margin-top: 1vh;
+    line-height: 1.25;
+    font-size: 1.4vw;
+    /*width: 40vw;*/
+}
+
+#txtTitl6 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    color: rgb(0, 252, 254);
+}
+
+#mainTxt6 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+}
+
+#mainTxt7 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    font-weight: 300;
+}
+
+#mainTxt8 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    font-weight: 300;
+}
+
+#mainTxt9 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    font-weight: 300;
+}
+
 .container{
     height: 100%;
+}
+
+.weight400{
+    font-weight: 400;
+}
+
+#mainTxt10 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+}
+
+#bottomTxt10 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    font-family: 'Roboto Slab';
+    font-weight: 300;
+
+    margin-top: 2vh;
+    line-height: 1.25;
+    font-size: 1.4vw;
+    /*width: 40vw;*/
+}
+
+#txtTitl10 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    color: rgb(0, 252, 254);
+}
+
+#roadmapBtn {
+    margin-top: 3vh;
+}
+
+#mainTxt11 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+}
+
+#bottomTxt11 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    font-family: 'Roboto Slab';
+    font-weight: 300;
+
+    margin-top: 2vh;
+    line-height: 1.25;
+    font-size: 1.4vw;
+    /*width: 40vw;*/
+}
+
+#bottomTxt211 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 1;
+    font-family: 'Roboto Slab';
+    font-weight: 300;
+
+    /*margin-top: 2vh;*/
+    line-height: 1.25;
+    font-size: 1.4vw;
+    margin-left:3vw;
+    width: 56vw;
+}
+
+#txtTitl11 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    color: rgb(0, 252, 254);
+}
+
+#txtTitl12 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    color: rgb(0, 252, 254);
+}
+
+#mainTxt12 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+}
+
+#bottomTxt12 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    font-family: 'Roboto Slab';
+    font-weight: 300;
+
+    margin-top: 1vh;
+    line-height: 1.25;
+    font-size: 1.4vw;
+    /*width: 40vw;*/
+}
+
+#txtTitl13 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    color: rgb(0, 252, 254);
+}
+
+#mainTxt13 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+}
+
+#bottomTxt13 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    font-family: 'Roboto Slab';
+    font-weight: 300;
+
+    margin-top: 1vh;
+    line-height: 1.25;
+    font-size: 1.4vw;
+    /*width: 40vw;*/
 }
