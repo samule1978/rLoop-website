@@ -74,7 +74,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     var iconImages = ['ico__01.png', 'ico__02.png', 'ico__03.png', 'ico__04.png'];
     var iconImages2 = ['ico__large_01.png', 'ico__large_03.png', 'ico__large_02.png', 'ico__large_04.png', 'rocket.png', 'infinity.png', 'projectX.png', 'coins.png', 'earth.png'];
     var iconLogoImages = ['logoP.png', 'logoDungi.png', 'logoTata.png', 'logoSlack.png', 'logoTE.png', 'logoArx.png', 'logoDigi.png', 'logosaAuto.png'];
-    var iconLogo2Images = ['logoCBS.png', 'logoBBC.png', 'logoForbes.png', 'logoWired.png', 'logoEcono.png', 'logoWSJ.png', 'logoCNBC.png', 'logoEngi.png'];
+    var iconLogo2Images = ['logosCBS.png', 'logosBBC.png', 'logosForbes.png', 'logosWired.png', 'logosEcono.png', 'logosWSJ.png', 'logosCNBC.png', 'logosEngi.png'];
     var coinImage = 'coin.png';
     var iconTexts = [{s:780,m:'MPH'}, {s:500,m:'MPH'}, {s:200,m:'MPH'}, {s:80,m:'MPH'}]
     var iconMaterials = [];
@@ -96,7 +96,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     var bufferInitialRotation = new THREE.Vector3(0,0,0);
 
     var tweensContainer = [];
-    var groupA, groupB, groupC, groupD, groupE, groupF, groupG, groupH; 
+    var groupA, groupB, groupC, groupD, groupE, groupF, groupG, groupH, groupPoints; 
 
     var defaultPixedSize = 1;
 
@@ -211,6 +211,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         groupE = new TWEEN.Group();
         groupF = new TWEEN.Group();
         groupG = new TWEEN.Group();
+        groupH = new TWEEN.Group();
+        groupPoints = new TWEEN.Group();
 
         setTheStyle.set_layout();
 
@@ -292,7 +294,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         rloop.geometriesArray.push(el);
 
         //// THIRD ELEMENT IS CIRCLE
-        //createThreeCirclesGeometry ( spritesPerCircle, raza1, zDistance, xDistance, numberOfCircles, center, scaleFactor, firstScale, offset )
+        //createThreeCirclesGeometry ( spritesPerCircle, raza1, zDistance, xDistance, numberOfCircles, center, scaleFactor, firstScale, , distort, sameScale, distanceMultiplier
         
         //coinObject.position = circleCenter;
         el = createThreeCirclesGeometry(70, 15, 5, 3, 4, circleCenter, 1.4, 1.5, Math.PI/140);
@@ -343,8 +345,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         el = createGeomFromImageData(loadedSteps[imageSteps[10]].imgData, 1.5, true);
         rloop.geometriesArray.push(el);
 
-        //// Thirteenth ELEMENT IS the BRAIN
-        el = createThreeCirclesGeometry(50, 25, 5, 3, 5, new THREE.Vector3(0,0,0), 1.3, 1.5, 0, true, 1);
+        //// Fourteenth ELEMENT IS the LAST CIRCLES
+        el = createThreeCirclesGeometry(60, 25, 9, 5.6, 5, new THREE.Vector3(0,0,0), 1.2, 2.2, Math.PI/60, false, 1);
         rloop.geometriesArray.push(el);
 
         console.log('All geometries generated: ', rloop.geometriesArray);
@@ -364,6 +366,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         groupE.update();
         groupF.update();
         groupG.update();
+        groupH.update();
+        groupPoints.update();
 
         if (rloop.animatingTween)
         {
@@ -496,7 +500,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             //camFOV = camFOV * 2.3;
            // defaultPixedSize = defaultPixedSize / 1.5;  
         } 
-        console.log('cam fov:', camFOV, rloop.mobile, rloop.portrait)
+        //console.log('cam fov:', camFOV, rloop.mobile, rloop.portrait)
         rloop.camera = new THREE.PerspectiveCamera(camFOV, width / height, camNear, camFar);
         rloop.camera.position.set(-0, 0, 32.5);
         rloop.camera.rememberPosition = rloop.camera.position.clone();
@@ -553,13 +557,13 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         coinObject = new THREE.Object3D();
         var coinTex = new THREE.TextureLoader().load("img/assets/"+ coinImage);
         var coinMat = new THREE.MeshBasicMaterial({map:coinTex, transparent: true})
-        var coinMesh = new THREE.Mesh(new THREE.CylinderGeometry(5,5,0.01,32, 1, false), coinMat);
+        var coinMesh = new THREE.Mesh(new THREE.CylinderGeometry(5,5,0.01,48, 1, false), coinMat);
         coinMesh.rotation.x -= Math.PI/2;
         coinMesh.rotation.y += Math.PI/2;
         //coinMesh.rotation.z -=Math.PI/2;
         coinMesh.position.x = 0;
         coinMesh.position.y = 0;
-        coinObject.position.x = circleCenter.x - 6.5;
+        coinObject.position.x = circleCenter.x - 7.1;
         coinObject.position.y = circleCenter.y + 0.5;
         coinObject.rotation.y = Math.PI/2 - Math.PI/11.25;
         coinObject.visible = false;
@@ -651,6 +655,57 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         }
 
         logo2Object = new THREE.Object3D();
+
+        for (q = 0;q<iconLogo2Images.length;q++)
+        {
+            var spriteM = new THREE.TextureLoader().load("img/sprites/logos/media/"+iconLogo2Images[q]);
+            var spr = new THREE.Sprite( new THREE.SpriteMaterial( {
+                map:spriteM,
+                color: 0xFFFFFF,
+                depthTest: false,
+                depthWrite:false,
+                transparent: true
+
+            } ))
+            spr.scale.set(4.8, 4.8, 4.8);
+            switch (q) {
+                case 0:
+                    spr.position.set(5, 4.5, 0);
+                    break;
+                case 1:
+                    spr.position.set(9.2, 7, 0)
+                    spr.scale.set(3,3,3)
+                    break;
+                case 2:
+                    spr.position.set(13, 5, 0)
+                    spr.scale.set(3.7,3.7,3.7)
+                    break;
+                case 3:
+                    spr.position.set(8.2, 0.5, 0)
+                    spr.scale.set(4.1,4.1,4.1)
+                    break;
+                case 4:
+                    spr.position.set(14.2, -0.1, 0)
+                    spr.scale.set(5.1,5.1,5.1)
+                    break;
+                case 5:
+                    spr.position.set(5, -5, 0)
+                    spr.scale.set(3.8,3.8,3.8)
+                    break;
+                case 6:
+                    spr.position.set(10, -4.5, 0)
+                    spr.scale.set(4.1,4.1,4.1)
+                    break;
+                case 7:
+                    spr.position.set(15, -6.5, 0)
+                    spr.scale.set(4.7,4.7,4.7)
+                    break;
+            }            
+            spr.scaleTo = spr.scale.clone();
+            spr.scale.set(0,0,0);
+            logo2Array.push(spr);
+            logo2Object.add(spr);
+        }
 
         iconObjectStep2 = new THREE.Object3D();
         for (q=0;q<iconImages2.length;q++)
@@ -796,7 +851,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
     function startScene(event)
     {
-        currentStage = parseInt($(event.target.triggerElement()).attr('id').split('pag')[1]) - 1;
+        if (event.scrollDirection!="PAUSED")
+            currentStage = parseInt($(event.target.triggerElement()).attr('id').split('pag')[1]) - 1;
         //console.log('leaving scene with event: ', event)
     }
 
@@ -932,8 +988,16 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             anim4:null,
             anim5:null
         }
+        ,
+        { // 13
+            anim1:null,
+            anim2:null,
+            anim3:null,
+            anim4:null,
+            anim5:null
+        }
     ];
-
+    var neededActive = ['0','0','0','0'];
     function sliderUpdate ( event )
     {
         //groupA.removeAll();
@@ -958,7 +1022,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                 // }
             }
         });
-
+        //console.log(currentStage);
+        
         switch (currentStage)
         {
             case 0:
@@ -968,12 +1033,12 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 1 && rloop.animationStep <= 2 && direction=='up')
                     {
                         rloop.animationStep = 1;
-
+                        neededActive = ['mainTxt', 'txtTitl'];
                         if (steps[0].anim1) steps[0].anim1.stop();
                         steps[0].anim1 = tweenOpacityTo('txtTitl', 0, 0).start().onComplete(function(){steps[0].anim1 = null});
-
+                        neededActive[0] = '0';
                         tweenToGeometryFromRandom(rloop.geometriesArray[1]);
-                        return;
+                        //return;
                     }
                 }
 
@@ -984,13 +1049,12 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         //console.log('one')
                         rloop.animationStep = 2;
                         executeAfterExitCircle();
-
+                        neededActive = ['mainTxt', 'txtTitl'];
                         if (steps[0].anim2) steps[0].anim2.stop();
                         steps[0].anim2 = tweenOpacityTo('mainTxt', 0, 0).start().onComplete(function(){steps[0].anim2 = null});
-
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         tweenToNewGeometry(rloop.geometriesArray[1]);
-                        return;
+                        //return;
                     }
                 }
 
@@ -999,14 +1063,13 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep < 2)
                     {
                         rloop.animationStep = 2;
-
+                        neededActive = ['mainTxt', 'txtTitl'];
                         if (steps[0].anim1) steps[0].anim1.stop();
                         steps[0].anim1 = tweenOpacityTo('txtTitl', 1, 0).start().onComplete(function(){steps[0].anim1 = null});
-
                         tweenOpacityTo('pre-block', 0, 100).start();
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         tweenToNewGeometry(rloop.geometriesArray[2]); 
-                        return;                           
+                        //return;                           
                     }                    
                 }
 
@@ -1015,14 +1078,14 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep<2.1 && direction=='down')
                     {
                         rloop.animationStep = 2.1;
-                        
+                        neededActive = ['mainTxt', 'txtTitl'];
                         if (steps[0].anim2) steps[0].anim2.stop();
                         steps[0].anim2 = tweenOpacityTo('mainTxt', 1, 0).start().onComplete(function(){steps[0].anim2 = null});
                         
                         //coinObject.rotation.y = -Math.PI/14;
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, new THREE.Vector3(0,-Math.PI/14,0));
                         tweenToGeometryFromRandom(rloop.geometriesArray[2],0, executeAfterLoadingCircle);
-                        return;
+                        //return;
                     }
                 }
                 break;
@@ -1034,10 +1097,10 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 2.1 && rloop.animationStep <= 3 && direction=='up')
                     {
                         rloop.animationStep = 2.1;
-
+                        neededActive = ['txtTitl', 'mainTxt' , 'txtTitl3', '0' ]
                         if (steps[0].anim1) steps[0].anim1.stop();
                         steps[0].anim1 = tweenOpacityTo('txtTitl', 1, 0).start().onComplete(function(){steps[0].anim1 = null});
-
+                        
                         if (steps[0].anim2) steps[0].anim2.stop();
                         steps[0].anim2 = tweenOpacityTo('mainTxt', 1, 0).start().onComplete(function(){steps[0].anim2 = null});
 
@@ -1047,7 +1110,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         var fPartRot = new THREE.Vector3(0,-Math.PI/14,0);
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, fPartRot);
                         tweenToGeometryFromRandom(rloop.geometriesArray[2],0, executeAfterLoadingCircle);
-                        return;
+                        //return;
                     }
                 }
 
@@ -1059,7 +1122,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
                          if (steps[0].anim2) steps[0].anim2.stop();
                         steps[0].anim2 = tweenOpacityTo('mainTxt', 0, 0).start().onComplete(function(){steps[0].anim2 = null});
-
+                         neededActive = ['txtTitl3', 'mainTxt' , 'bottomTxt3', 'mainTxt3' ]
                          if (steps[1].anim2) steps[1].anim2.stop();
                         steps[1].anim2 = tweenOpacityTo('mainTxt3', 0, 0).start().onComplete(function(){steps[1].anim2 = null});
 
@@ -1068,7 +1131,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         tweenToNewGeometry(rloop.geometriesArray[2]);
-                        return;
+                        //return;
                     }
                 }                
 
@@ -1079,7 +1142,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         //console.log('here: ', rloop.animationStep)
                         rloop.animationStep = 3;
                         executeAfterExitCircle();
-
+                        neededActive = ['txtTitl3', 'txtTitl' , 'mainTxt', '0' ]
                          if (steps[0].anim2) steps[0].anim2.stop();
                         steps[0].anim2 = tweenOpacityTo('mainTxt', 0, 0).start().onComplete(function(){steps[0].anim2 = null});
 
@@ -1090,7 +1153,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         steps[1].anim1 = tweenOpacityTo('txtTitl3', 1, 0).start().onComplete(function(){steps[1].anim1 = null});
 
                         tweenToNewGeometry(rloop.geometriesArray[3]); 
-                        return;                           
+                        //return;                           
                     }                    
                 }
 
@@ -1099,7 +1162,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep<3.1 && direction=='down')
                     {          
                         rloop.animationStep = 3.1; 
-
+                        neededActive = ['txtTitl3', 'mainTxt3' , 'bottomTxt3', '0' ];
                         if (steps[1].anim2) steps[1].anim2.stop();
                         steps[1].anim2 = tweenOpacityTo('mainTxt3', 1, 0).start().onComplete(function(){steps[1].anim2 = null});
 
@@ -1110,7 +1173,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         var fPartRot = new THREE.Vector3(0,-Math.PI/14,0);
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, fPartRot);
                         tweenToGeometryFromRandom(rloop.geometriesArray[3],0, null);
-                        return;
+                        //return;
                     }
                 }
                 break;
@@ -1121,7 +1184,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 3.1 && rloop.animationStep <= 4 && direction=='up')
                     {
                         rloop.animationStep = 3.1;
-
+                        neededActive = ['txtTitl3', 'mainTxt3' , 'bottomTxt3', 'txtTitl4' ];
                         if (steps[1].anim1) steps[1].anim1.stop();
                         steps[1].anim1 = tweenOpacityTo('txtTitl3', 1, 0).start().onComplete(function(){steps[1].anim1 = null});
 
@@ -1132,13 +1195,13 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         steps[1].anim3 = tweenOpacityTo('bottomTxt3', 1, 0).start().onComplete(function(){steps[1].anim3 = null});
 
                         if (steps[2].anim1) steps[2].anim1.stop();
-                        steps[2].anim1 = tweenOpacityTo('txtTitl43', 0, 0).start().onComplete(function(){steps[2].anim1 = null});
+                        steps[2].anim1 = tweenOpacityTo('txtTitl4', 0, 0).start().onComplete(function(){steps[2].anim1 = null});
                         
                         var fPartPoz = new THREE.Vector3(11,-2,-7);
                         var fPartRot = new THREE.Vector3(0,-Math.PI/14,0);
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, fPartRot);
                         tweenToGeometryFromRandom(rloop.geometriesArray[3],0,null);
-                        return;
+                        //return;
                     }
                 }
 
@@ -1148,7 +1211,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     {
                         rloop.animationStep = 4;
                         tweenIconsOut();
-
+                        neededActive = ['txtTitl3', 'mainTxt3' , 'mainTxt4', 'bottomTxt4', 'txtTitl4'];
                         if (steps[1].anim2) steps[1].anim2.stop();                        
                         steps[1].anim2 = tweenOpacityTo('mainTxt3', 0, 0).start().onComplete(function(){steps[1].anim2 = null});
 
@@ -1160,7 +1223,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         tweenToNewGeometry(rloop.geometriesArray[3]);
-                        return;
+                        //return;
                     }
                 }   
 
@@ -1169,7 +1232,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep < 4 && direction=='down')
                     {
                         rloop.animationStep = 4;
-
+                        neededActive = ['txtTitl4', 'txtTitl3' , 'mainTxt3', 'bottomTxt3' ];
                         if (steps[1].anim1) steps[1].anim1.stop();
                         steps[1].anim1 = tweenOpacityTo('txtTitl3', 0, 0).start().onComplete(function(){steps[1].anim1 = null});
 
@@ -1184,7 +1247,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);                        
                         tweenToNewGeometry(rloop.geometriesArray[4]); 
-                        return;
+                        //return;
                     }
                 }
                 if (scrollPercentInStage>0.6)
@@ -1192,7 +1255,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep<4.1 && direction=='down')
                     {          
                         rloop.animationStep = 4.1; 
-
+                        neededActive = ['txtTitl4', 'mainTxt4' , 'bottomTxt4', '0' ];
                         if (steps[2].anim2) steps[2].anim2.stop();                        
                         steps[2].anim2 = tweenOpacityTo('mainTxt4', 1, 0).start().onComplete(function(){steps[2].anim2 = null});
 
@@ -1206,7 +1269,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         var middlePoint = getMiddlePointGeom4(rloop.geometriesArray[4], fPartPoz);                        
                         //tweenToGeometryFromRandom(middlePoint,0, executeAfterMiddlePoint, false );
                         tweenToGeometryFromRandom(rloop.geometriesArray[4],0, null, false );
-                        return;
+                        //return;
                     }
                 }
                 break;
@@ -1218,7 +1281,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 4.1 && rloop.animationStep <= 5 && direction=='up')
                     {
                         rloop.animationStep = 4.1;
-
+                        //neededActive = ['txtTitl4', 'mainTxt4' , 'bottomTxt4', '0' ];
+                        neededActive = [ 'txtTitl4' , 'mainTxt4', 'bottomTxt4', 'watchVideoBtn' ];
                         if (steps[2].anim1) steps[2].anim1.stop();
                         steps[2].anim1 = tweenOpacityTo('txtTitl4', 1, 0).start().onComplete(function(){steps[2].anim1 = null});
 
@@ -1240,7 +1304,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         getMiddlePointGeom4(rloop.geometriesArray[4], fPartPoz);                       
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, bufferInitialRotation);
                         tweenToGeometryFromRandom(rloop.geometriesArray[4],0,null);
-                        return;
+                        //return;
                     }
                 }
 
@@ -1249,7 +1313,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 5 && direction=='up')
                     {
                         rloop.animationStep = 5;
-                        //tweenIconsOut();
+                        neededActive = ['txtTitl5', 'mainTxt4' , 'bottomTxt5', 'mainTxt5' ];
                         if (steps[2].anim2) steps[2].anim2.stop();                        
                         steps[2].anim2 = tweenOpacityTo('mainTxt4', 0, 0).start().onComplete(function(){steps[2].anim2 = null});
 
@@ -1261,7 +1325,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         tweenToNewGeometry(rloop.geometriesArray[4]);
-                        return;
+                        //return;
                     }
                 }   
 
@@ -1271,7 +1335,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     {
                         rloop.animationStep = 5;
                         tweenIconsOut();
-
+                        neededActive = ['txtTitl5', 'txtTitl4' , 'mainTxt4', 'bottomTxt4', 'watchVideoBtn' ];
                         if (steps[2].anim1) steps[2].anim1.stop();
                         steps[2].anim1 = tweenOpacityTo('txtTitl4', 0, 0).start().onComplete(function(){steps[2].anim1 = null});
 
@@ -1290,7 +1354,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         tweenOpacityTo('txtTitl5', 1, 0).start();
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         tweenToNewGeometry(rloop.geometriesArray[5]); 
-                        return;
+                        //return;
                     }
                 }
                 if (scrollPercentInStage>0.6)
@@ -1298,7 +1362,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep<5.1 && direction=='down')
                     {          
                         rloop.animationStep = 5.1; 
-
+                        neededActive = ['txtTitl5', 'mainTxt5' , 'bottomTxt5', '0' ];
                         if (steps[3].anim2) steps[3].anim2.stop();                        
                         steps[3].anim2 = tweenOpacityTo('mainTxt5', 1, 0).start().onComplete(function(){steps[3].anim2 = null});
 
@@ -1309,7 +1373,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         var fPartRot = new THREE.Vector3(0,-Math.PI/14,0);
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, bufferInitialRotation);
                         tweenToGeometryFromRandom(rloop.geometriesArray[5],0, null);
-                        return;
+                        //return;
                     }
                 }
                 break;
@@ -1321,7 +1385,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 5.1 && rloop.animationStep <= 6 && direction=='up')
                     {
                         rloop.animationStep = 5.1;
-
+                        neededActive = ['txtTitl5', 'mainTxt5' , 'bottomTxt5', 'txtTitl6' ];
                         if (steps[3].anim1) steps[3].anim1.stop();
                         steps[3].anim1 = tweenOpacityTo('txtTitl5', 1, 0).start().onComplete(function(){steps[3].anim1 = null});
 
@@ -1340,7 +1404,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         tweenToGeometryFromRandom(rloop.geometriesArray[5],0,null);
                         var randomFactor = 5;
                         //tweenToNewGeometry(rloop.geometriesArray[6],0, randomFactor); 
-                        return;
+                        //return;
                     }
                 }
 
@@ -1352,7 +1416,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         //tweenIconsOut();
                         if (steps[3].anim2) steps[3].anim2.stop();                        
                         steps[3].anim2 = tweenOpacityTo('mainTxt5', 0, 0).start().onComplete(function(){steps[3].anim2 = null});
-
+                        neededActive = ['txtTitl5', 'mainTxt5' , 'mainTxt6', 'txtTitl6' ];
                         if (steps[4].anim2) steps[4].anim2.stop();                        
                         steps[4].anim2 = tweenOpacityTo('mainTxt6', 0, 0).start().onComplete(function(){steps[4].anim2 = null});
                         tweenIconsOutStep2_1();
@@ -1361,7 +1425,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, fPartRot);
                         var randomFactor = 5;
                         //tweenToNewGeometry(rloop.geometriesArray[5],0, randomFactor);
-                        return;
+                        //return;
                     }
                 }  
 
@@ -1371,7 +1435,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     {
                         rloop.animationStep = 6;
                         tweenIconsOut();
-
+                        neededActive = ['txtTitl6', 'txtTitl5' , 'mainTxt5', 'bottomTxt5' ];
                         if (steps[3].anim1) steps[3].anim1.stop();
                         steps[3].anim1 = tweenOpacityTo('txtTitl5', 0, 0).start().onComplete(function(){steps[3].anim1 = null});
 
@@ -1387,7 +1451,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         var randomFactor = 5;
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         tweenToNewGeometry(rloop.geometriesArray[6],0, randomFactor); 
-                        return;
+                        //return;
                     }
                 }
                 if (scrollPercentInStage>0.6)
@@ -1396,7 +1460,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     {          
                         rloop.animationStep = 6.1; 
                         //turnOpacityOffExcept(['mainTxt5','bottomTxt5'])
-
+                        neededActive = ['txtTitl6', 'mainTxt6' , '0', '0' ];
                         if (steps[4].anim2) steps[4].anim2.stop();                        
                         steps[4].anim2 = tweenOpacityTo('mainTxt6', 1, 0).start().onComplete(function(){steps[4].anim2 = null});
                         
@@ -1408,7 +1472,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         tweenIconsInStep2_1();
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, bufferInitialRotation);
                         //tweenToGeometryFromRandom(rloop.geometriesArray[6],0, null);
-                        return;
+                        //return;
                     }
                 }
                 break;
@@ -1420,7 +1484,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 6.1 && rloop.animationStep <= 7 && direction=='up')
                     {
                         rloop.animationStep = 6.1;
-
+                        neededActive = ['txtTitl6', 'mainTxt6' , '0', '0' ];
                         if (steps[4].anim1) steps[4].anim1.stop();
                         steps[4].anim1 = tweenOpacityTo('txtTitl6', 1, 0).start().onComplete(function(){steps[4].anim1 = null});
 
@@ -1431,7 +1495,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, fPartRot);
                         var randomFactor = 5;
                         tweenToNewGeometry(rloop.geometriesArray[6],0, randomFactor); 
-                        return;
+                        //return;
                     }
                 }
 
@@ -1440,16 +1504,17 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 7 && direction=='up')
                     {
                         rloop.animationStep = 7;
-
+                        neededActive = ['mainTxt6', 'mainTxt7' , '0', '0' ];
                         if (steps[4].anim2) steps[4].anim2.stop();                        
                         steps[4].anim2 = tweenOpacityTo('mainTxt6', 0, 0).start().onComplete(function(){steps[4].anim2 = null});
+                        
 
                         if (steps[5].anim2) steps[5].anim2.stop();                        
                         steps[5].anim2 = tweenOpacityTo('mainTxt7', 0, 0).start().onComplete(function(){steps[5].anim2 = null});
                         tweenIconsOutStep2_2();
                         //tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         tweenToGeometryFromRandom(rloop.geometriesArray[6],0, null, false, false);
-                        return;
+                        //return;
                     }
                 }  
 
@@ -1458,7 +1523,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep < 7 && direction=='down')
                     {
                         rloop.animationStep = 7;
-
+                        neededActive = ['txtTitl6', 'mainTxt6' , '0', '0' ];
                         if (steps[4].anim1) steps[4].anim1.stop();
                         steps[4].anim1 = tweenOpacityTo('txtTitl6', 0, 0).start().onComplete(function(){steps[4].anim1 = null});
 
@@ -1466,13 +1531,14 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         steps[4].anim2 = tweenOpacityTo('mainTxt6', 0, 0).start().onComplete(function(){steps[4].anim2 = null});
                      
                         tweenToGeometryFromRandom(rloop.geometriesArray[6],0, null, false, true);
-                        return;
+                        //return;
                     }
                 }
                 if (scrollPercentInStage>0.6)
                 {
                     if (rloop.animationStep<7.1 && direction=='down')
                     {          
+                        neededActive = ['0', 'mainTxt7' , '0', '0' ];
                         rloop.animationStep = 7.1; 
                         if (steps[5].anim2) steps[5].anim2.stop(); 
                         tweenIconsInStep2_2();                       
@@ -1488,7 +1554,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         //el = addTwoGeometries(rloop.geometriesArray[6], temp, 37);
                         //rloop.geometriesArray[7] = addTwoGeometries(rloop.geometriesArray[6], temp, 37);
                         tweenToGeometryFromRandom(rloop.geometriesArray[7],0, null);
-                        return;
+                        //return;
                     }
                 }
                 break;
@@ -1500,11 +1566,11 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 7.1 && rloop.animationStep <= 8 && direction=='up')
                     {
                         rloop.animationStep = 7.1;
-                        
+                        neededActive = ['0', 'mainTxt7' , '0', '0' ];
                         if (steps[5].anim2) steps[5].anim2.stop();                        
                         steps[5].anim2 = tweenOpacityTo('mainTxt7', 1, 0).start().onComplete(function(){steps[5].anim2 = null});                        
                         tweenToGeometryFromRandom(rloop.geometriesArray[7],0, null, false, false);
-                        return;
+                        //return;
                     }
                 }
 
@@ -1516,13 +1582,13 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
                         if (steps[5].anim2) steps[5].anim2.stop();                        
                         steps[5].anim2 = tweenOpacityTo('mainTxt7', 0, 0).start().onComplete(function(){steps[5].anim2 = null});
-
+                        neededActive = ['mainTxt7', 'mainTxt8' , '0', '0' ];
                         if (steps[6].anim2) steps[6].anim2.stop();                        
                         steps[6].anim2 = tweenOpacityTo('mainTxt8', 0, 0).start().onComplete(function(){steps[6].anim2 = null});
                         tweenIconsOutStep2_3();
                         //tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         //tweenToGeometryFromRandom(rloop.geometriesArray[6],0, null, false, false);
-                        return;
+                        //return;
                     }
                 }  
 
@@ -1530,12 +1596,13 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                 {
                     if (rloop.animationStep < 8 && direction=='down')
                     {
-                        rloop.animationStep = 8;                        
+                        rloop.animationStep = 8;  
+                        neededActive = ['0', 'mainTxt7' , '0', '0' ];                      
                         if (steps[5].anim2) steps[5].anim2.stop();                        
                         steps[5].anim2 = tweenOpacityTo('mainTxt7', 0, 0).start().onComplete(function(){steps[5].anim2 = null});
                         
                         tweenToGeometryFromRandom(rloop.geometriesArray[8],0, null, false, true);
-                        return;
+                        //return;
                     }
                 }
 
@@ -1545,12 +1612,12 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     {          
                         rloop.animationStep = 8.1; 
                         tweenIconsInStep2_3();    
-
+                        neededActive = ['0', 'mainTxt8' , '0', '0' ];
                         if (steps[6].anim2) steps[6].anim2.stop();                                           
                         steps[6].anim2 = tweenOpacityTo('mainTxt8', 1, 0).start().onComplete(function(){steps[6].anim2 = null});
                         
                         //tweenToGeometryFromRandom(rloop.geometriesArray[8],0, null);
-                        return;
+                        //return;
                     }
                 }
                 break;
@@ -1561,11 +1628,11 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 8.1 && rloop.animationStep <= 9 && direction=='up')
                     {
                         rloop.animationStep = 8.1;
-                        
+                        neededActive = ['0', 'mainTxt8' , '0', '0' ];
                         if (steps[6].anim2) steps[6].anim2.stop();                        
                         steps[6].anim2 = tweenOpacityTo('mainTxt8', 1, 0).start().onComplete(function(){steps[6].anim2 = null});                        
                         tweenToGeometryFromRandom(rloop.geometriesArray[8],0, null, false, false);
-                        return;
+                        //return;
                     }
                 }
 
@@ -1574,14 +1641,14 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 9 && direction=='up')
                     {
                         rloop.animationStep = 9;
-
+                        neededActive = ['mainTxt8', 'mainTxt9' , '0', '0' ];
                         if (steps[6].anim2) steps[6].anim2.stop();                        
                         steps[6].anim2 = tweenOpacityTo('mainTxt8', 0, 0).start().onComplete(function(){steps[6].anim2 = null});
 
                         if (steps[7].anim2) steps[7].anim2.stop();                        
                         steps[7].anim2 = tweenOpacityTo('mainTxt9', 0, 0).start().onComplete(function(){steps[7].anim2 = null});
                         tweenIconsOutStep2_4();                       
-                        return;
+                        //return;
                     }
                 }  
 
@@ -1589,12 +1656,13 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                 {
                     if (rloop.animationStep < 9 && direction=='down')
                     {
-                        rloop.animationStep = 9;                        
+                        rloop.animationStep = 9;
+                        neededActive = ['0', 'mainTxt8' , '0', '0' ];
                         if (steps[6].anim2) steps[6].anim2.stop();                        
                         steps[6].anim2 = tweenOpacityTo('mainTxt8', 0, 0).start().onComplete(function(){steps[6].anim2 = null});
                         
                         tweenToGeometryFromRandom(rloop.geometriesArray[9],0, null, false, true);
-                        return;
+                        //return;
                     }
                 }
 
@@ -1602,11 +1670,12 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                 {
                     if (rloop.animationStep<9.1 && direction=='down')
                     {          
-                        rloop.animationStep = 9.1;                         
+                        rloop.animationStep = 9.1;
+                        neededActive = ['0', 'mainTxt9' , '0', '0' ];
                         tweenIconsInStep2_4();
                         if (steps[7].anim2) steps[7].anim2.stop();                                           
                         steps[7].anim2 = tweenOpacityTo('mainTxt9', 1, 0).start().onComplete(function(){steps[7].anim2 = null});                        
-                        return;
+                        //return;
                     }
                 }
                 break;
@@ -1618,7 +1687,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 9.1 && rloop.animationStep <= 10 && direction=='up')
                     {
                         rloop.animationStep = 9.1;
-                        
+                        neededActive = ['txtTitl10', 'mainTxt9' , '0', '0' ];
                         if (steps[7].anim2) steps[7].anim2.stop();                        
                         steps[7].anim2 = tweenOpacityTo('mainTxt9', 1, 0).start().onComplete(function(){steps[7].anim2 = null});                        
 
@@ -1629,7 +1698,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         tweenIconsInAllStep2();
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, fPartRot);
                         tweenToGeometryFromRandom(rloop.geometriesArray[9],0, null, false, false);
-                        return;
+                        //return;
                     }
                 }
 
@@ -1638,7 +1707,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 10 && direction=='up')
                     {
                         rloop.animationStep = 10;
-
+                        neededActive = ['txtTitl10', 'mainTxt9' , 'mainTxt10', 'bottomTxt10', 'roadmapBtn'];
                         if (steps[7].anim2) steps[7].anim2.stop();                        
                         steps[7].anim2 = tweenOpacityTo('mainTxt9', 0, 0).start().onComplete(function(){steps[7].anim2 = null});
 
@@ -1651,7 +1720,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         if (steps[8].anim4) steps[8].anim4.stop();                        
                         steps[8].anim4 = tweenOpacityTo('roadmapBtn', 0, 0).start().onComplete(function(){steps[8].anim4 = null});
                         tweenToNewGeometry(rloop.geometriesArray[9],0, 5); 
-                        return;
+                        //return;
                     }
                 }  
 
@@ -1660,6 +1729,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep < 10 && direction=='down')
                     {
                         rloop.animationStep = 10;
+                        neededActive = ['txtTitl10', 'mainTxt9' , '0', '0' ];
                         if (steps[7].anim2) steps[7].anim2.stop();                        
                         steps[7].anim2 = tweenOpacityTo('mainTxt9', 0, 0).start().onComplete(function(){steps[7].anim2 = null});
                         tweenIconsOutAllStep2();
@@ -1667,7 +1737,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         steps[8].anim1 = tweenOpacityTo('txtTitl10', 1, 0).start().onComplete(function(){steps[8].anim1 = null});
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         tweenToNewGeometry(rloop.geometriesArray[10],0, 5); 
-                        return;
+                        //return;
                     }
                 }
 
@@ -1675,7 +1745,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                 {
                     if (rloop.animationStep<10.1 && direction=='down')
                     {          
-                        rloop.animationStep = 10.1;                         
+                        rloop.animationStep = 10.1;   
+                        neededActive = ['txtTitl10', 'mainTxt10' , 'bottomTxt10', 'roadmapBtn' ];                      
                         //tweenIconsInStep2_4();
                         if (steps[8].anim2) steps[8].anim2.stop();                                           
                         steps[8].anim2 = tweenOpacityTo('mainTxt10', 1, 0).start().onComplete(function(){steps[8].anim2 = null});
@@ -1689,7 +1760,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         var fPartRot = new THREE.Vector3(0,-Math.PI/14,0);
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, fPartRot);
                         tweenToGeometryFromRandom(rloop.geometriesArray[10],0, null, false, false);                      
-                        return;
+                        //return;
                     }
                 }
                 break;
@@ -1701,7 +1772,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 10.1 && rloop.animationStep <= 11 && direction=='up')
                     {
                         rloop.animationStep = 10.1;
-                                                
+                        neededActive = ['txtTitl10', 'mainTxt10' , 'bottomTxt10', 'roadmapBtn' ];
                         if (steps[8].anim3) steps[8].anim3.stop();                        
                         steps[8].anim3 = tweenOpacityTo('bottomTxt10', 1, 0).start().onComplete(function(){steps[8].anim3 = null});                      
 
@@ -1715,7 +1786,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         var fPartRot = new THREE.Vector3(0,-Math.PI/14,0);
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, fPartRot);
                         tweenToGeometryFromRandom(rloop.geometriesArray[10],0, null, false, false);
-                        return;
+                       // return;
                     }
                 }
 
@@ -1724,7 +1795,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 11 && direction=='up')
                     {
                         rloop.animationStep = 11;
-
+                        neededActive = ['txtTitl11', 'mainTxt11' , 'bottomTxt11', 'txtTitl10' ];
                         if (steps[8].anim1) steps[8].anim1.stop();
                         steps[8].anim1 = tweenOpacityTo('txtTitl10', 1, 0).start().onComplete(function(){steps[8].anim1 = null});
 
@@ -1738,7 +1809,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         if (steps[9].anim3) steps[9].anim3.stop();                        
                         steps[9].anim3 = tweenOpacityTo('bottomTxt11', 0, 0).start().onComplete(function(){steps[9].anim3 = null});                       
                         tweenToNewGeometry(rloop.geometriesArray[10],0, 5); 
-                        return;
+                        //return;
                     }
                 }  
 
@@ -1747,7 +1818,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep < 11 && direction=='down')
                     {
                         rloop.animationStep = 11;
-
+                        neededActive = ['txtTitl11', 'mainTxt10' , 'bottomTxt10', 'roadmapBtn' ];
                         if (steps[8].anim2) steps[8].anim2.stop();                        
                         steps[8].anim2 = tweenOpacityTo('mainTxt10', 0, 0).start().onComplete(function(){steps[8].anim2 = null});
 
@@ -1761,7 +1832,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         steps[9].anim1 = tweenOpacityTo('txtTitl11', 1, 0).start().onComplete(function(){steps[9].anim1 = null});
                         //tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         tweenToNewGeometry(rloop.geometriesArray[11],0, 5); 
-                        return;
+                        //return;
                     }
                 }
 
@@ -1770,7 +1841,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep<11.1 && direction=='down')
                     {          
                         rloop.animationStep = 11.1;        
-
+                        neededActive = ['txtTitl11', 'mainTxt11' , 'bottomTxt11', 'txtTitl10' ];
                         if (steps[8].anim1) steps[8].anim1.stop();
                         steps[8].anim1 = tweenOpacityTo('txtTitl10', 0, 0).start().onComplete(function(){steps[8].anim1 = null});
 
@@ -1784,7 +1855,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         var fPartRot = new THREE.Vector3(-Math.PI/64,-Math.PI/6.3,0);
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, fPartRot);
                         tweenToGeometryFromRandom(rloop.geometriesArray[11],0, null, false, false);                      
-                        return;
+                        //return;
                     }
                 }
                 break;
@@ -1796,17 +1867,20 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 11.1 && rloop.animationStep <= 12 && direction=='up')
                     {
                         rloop.animationStep = 11.1;
-                                                
+                        neededActive = ['txtTitl11', 'mainTxt11' , 'bottomTxt11', 'txtTitl12' ];          
                         if (steps[9].anim3) steps[9].anim3.stop();                        
-                        steps[9].anim3 = tweenOpacityTo('bottomTxt11', 1, 0).start().onComplete(function(){steps[9].anim3 = null});                      
+                        steps[9].anim3 = tweenOpacityTo('bottomTxt11', 1, 0).start().onComplete(function(){steps[9].anim3 = null});  
+
+                        if (steps[9].anim2) steps[9].anim2.stop();                        
+                        steps[9].anim2 = tweenOpacityTo('mainTxt11', 1, 0).start().onComplete(function(){steps[9].anim2 = null});                    
 
                         if (steps[10].anim1) steps[10].anim1.stop();
                         steps[10].anim1 = tweenOpacityTo('txtTitl12', 0, 0).start().onComplete(function(){steps[10].anim1 = null});
-                       var fPartPoz = new THREE.Vector3(11,0,0);
+                        var fPartPoz = new THREE.Vector3(11,0,0);
                         var fPartRot = new THREE.Vector3(-Math.PI/64,-Math.PI/6.3,0);
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, fPartRot);
                         tweenToGeometryFromRandom(rloop.geometriesArray[11],0, null, false, false);
-                        return;
+                        //return;
                     }
                 }
 
@@ -1815,12 +1889,9 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 12 && direction=='up')
                     {
                         rloop.animationStep = 12;
-
+                        neededActive = ['txtTitl11', 'mainTxt12' , 'bottomTxt12', 'txtTitl12' ];
                         if (steps[9].anim1) steps[9].anim1.stop();
-                        steps[9].anim1 = tweenOpacityTo('txtTitl11', 1, 0).start().onComplete(function(){steps[9].anim1 = null});
-
-                        if (steps[9].anim2) steps[9].anim2.stop();                        
-                        steps[9].anim2 = tweenOpacityTo('mainTxt11', 1, 0).start().onComplete(function(){steps[9].anim2 = null});
+                        steps[9].anim1 = tweenOpacityTo('txtTitl11', 1, 0).start().onComplete(function(){steps[9].anim1 = null});                        
                        
 
                         if (steps[10].anim2) steps[10].anim2.stop();                        
@@ -1829,7 +1900,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         if (steps[10].anim3) steps[10].anim3.stop();                        
                         steps[10].anim3 = tweenOpacityTo('bottomTxt12', 0, 0).start().onComplete(function(){steps[10].anim3 = null});                       
                         tweenToNewGeometry(rloop.geometriesArray[11],0, 3); 
-                        return;
+                        //return;
                     }
                 }  
 
@@ -1838,7 +1909,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep < 12 && direction=='down')
                     {
                         rloop.animationStep = 12;
-
+                        neededActive = ['txtTitl12', 'mainTxt11' , 'bottomTxt11', 'txtTitl12' ];
                         if (steps[9].anim2) steps[9].anim2.stop();                        
                         steps[9].anim2 = tweenOpacityTo('mainTxt11', 0, 0).start().onComplete(function(){steps[9].anim2 = null});
 
@@ -1849,7 +1920,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         steps[10].anim1 = tweenOpacityTo('txtTitl12', 1, 0).start().onComplete(function(){steps[10].anim1 = null});
                         //tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         tweenToNewGeometry(rloop.geometriesArray[12],0, 3); 
-                        return;
+                        //return;
                     }
                 }
 
@@ -1858,7 +1929,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep<12.1 && direction=='down')
                     {          
                         rloop.animationStep = 12.1;        
-
+                        neededActive = ['txtTitl12', 'mainTxt12' , 'bottomTxt12', 'txtTitl11' ,' test' ];
                         if (steps[9].anim1) steps[9].anim1.stop();
                         steps[9].anim1 = tweenOpacityTo('txtTitl11', 0, 0).start().onComplete(function(){steps[9].anim1 = null});
 
@@ -1872,19 +1943,65 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         var fPartRot = new THREE.Vector3(-Math.PI/64,-Math.PI/6.3,0);
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, fPartRot);
                         tweenToGeometryFromRandom(rloop.geometriesArray[12],0, null, false, false);                      
-                        return;
+                        //return;
                     }
                 }
 
                 break;
 
             case 11:
+
+
+                if (scrollPercentInStage<0.3)
+                {
+                    if (rloop.animationStep > 12.1 && rloop.animationStep <= 13 && direction=='up')
+                    {
+                        rloop.animationStep = 12.1;
+                        neededActive = ['txtTitl12', 'mainTxt12' , 'bottomTxt12', 'txtTitl13' ];         
+                        if (steps[10].anim3) steps[10].anim3.stop();                        
+                        steps[10].anim3 = tweenOpacityTo('bottomTxt12', 1, 0).start().onComplete(function(){steps[10].anim3 = null});   
+
+                        if (steps[10].anim2) steps[10].anim2.stop();                        
+                        steps[10].anim2 = tweenOpacityTo('mainTxt12', 1, 0).start().onComplete(function(){steps[10].anim2 = null});                                          
+
+                        if (steps[11].anim1) steps[11].anim1.stop();
+                        steps[11].anim1 = tweenOpacityTo('txtTitl13', 0, 0).start().onComplete(function(){steps[11].anim1 = null});
+                        var fPartPoz = new THREE.Vector3(31,0,-60);
+                        var fPartRot = new THREE.Vector3(-Math.PI/64,-Math.PI/6.3,0);
+                        tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, fPartRot);
+                        tweenToGeometryFromRandom(rloop.geometriesArray[12],0, null, false, false);
+                        //return;
+                    }
+                }
+
+                if (scrollPercentInStage<0.7)
+                {
+                    if (rloop.animationStep > 13 && direction=='up')
+                    {
+                        rloop.animationStep = 13;
+                        neededActive = ['txtTitl12', 'mainTxt13' , 'bottomTxt13', '0' ];     
+                        tweenLogosOutStep1();
+                        if (steps[10].anim1) steps[10].anim1.stop();
+                        steps[10].anim1 = tweenOpacityTo('txtTitl12', 1, 0).start().onComplete(function(){steps[10].anim1 = null});                                           
+
+                        if (steps[11].anim2) steps[11].anim2.stop();                        
+                        steps[11].anim2 = tweenOpacityTo('mainTxt13', 0, 0).start().onComplete(function(){steps[11].anim2 = null});
+
+                        if (steps[11].anim3) steps[11].anim3.stop();                        
+                        steps[11].anim3 = tweenOpacityTo('bottomTxt13', 0, 0).start().onComplete(function(){steps[11].anim3 = null});                       
+                        //tweenToNewGeometry(rloop.geometriesArray[12],0, 3); 
+                        //return;
+                    }
+                }  
+
+
                 if (scrollPercentInStage>0.4 && scrollPercentInStage<0.6) 
                 {
                     if (rloop.animationStep < 13 && direction=='down')
                     {
                         rloop.animationStep = 13;
 
+                        neededActive = ['txtTitl13', 'mainTxt12' , 'bottomTxt12', '0' ];     
                         if (steps[10].anim2) steps[10].anim2.stop();                        
                         steps[10].anim2 = tweenOpacityTo('mainTxt12', 0, 0).start().onComplete(function(){steps[10].anim2 = null});
 
@@ -1895,7 +2012,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         steps[11].anim1 = tweenOpacityTo('txtTitl13', 1, 0).start().onComplete(function(){steps[11].anim1 = null});
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
                         tweenToNewGeometry(rloop.geometriesArray[13],0, 3); 
-                        return;
+                        //return;
                     }
                 }
 
@@ -1904,7 +2021,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep<13.1 && direction=='down')
                     {          
                         rloop.animationStep = 13.1;        
-
+                        neededActive = ['txtTitl13', 'mainTxt13' , 'bottomTxt13', 'txtTitl12' ];     
                         if (steps[10].anim1) steps[10].anim1.stop();
                         steps[10].anim1 = tweenOpacityTo('txtTitl12', 0, 0).start().onComplete(function(){steps[10].anim1 = null});
 
@@ -1918,11 +2035,192 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         //var fPartRot = new THREE.Vector3(-Math.PI/64,-Math.PI/6.3,0);
                         //tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, fPartPoz, fPartRot);
                         //tweenToGeometryFromRandom(rloop.geometriesArray[12],0, null, false, false);                      
-                        return;
+                        //return;
                     }
                 }
                 break;
+
+            case 12:
+
+                if (scrollPercentInStage<0.3)
+                {
+                    if (rloop.animationStep > 13.1 && rloop.animationStep <= 14 && direction=='up')
+                    {
+                        rloop.animationStep = 13.1;
+                        tweenLogosInStep1();
+                        neededActive = ['txtTitl13', 'mainTxt13' , 'bottomTxt13', 'txtTitl14' ];         
+                        if (steps[11].anim3) steps[11].anim3.stop();                        
+                        steps[11].anim3 = tweenOpacityTo('bottomTxt13', 1, 0).start().onComplete(function(){steps[11].anim3 = null});   
+
+                        if (steps[11].anim2) steps[11].anim2.stop();                        
+                        steps[11].anim2 = tweenOpacityTo('mainTxt13', 1, 0).start().onComplete(function(){steps[11].anim2 = null});                                          
+
+                        if (steps[12].anim1) steps[12].anim1.stop();
+                        steps[12].anim1 = tweenOpacityTo('txtTitl14', 0, 0).start().onComplete(function(){steps[12].anim1 = null});                        
+                    }
+                }
+
+                if (scrollPercentInStage<0.7)
+                {
+                    if (rloop.animationStep > 14 && direction=='up')
+                    {
+                        rloop.animationStep = 14;
+                        neededActive = ['txtTitl14', 'mainTxt14' , 'bottomTxt14', 'txtTitl13' ];     
+                        tweenLogosOutStep2();
+                        if (steps[11].anim1) steps[11].anim1.stop();
+                        steps[11].anim1 = tweenOpacityTo('txtTitl13', 1, 0).start().onComplete(function(){steps[11].anim1 = null});                                           
+
+                        if (steps[12].anim2) steps[12].anim2.stop();                        
+                        steps[12].anim2 = tweenOpacityTo('mainTxt14', 0, 0).start().onComplete(function(){steps[12].anim2 = null});
+
+                        if (steps[12].anim3) steps[12].anim3.stop();                        
+                        steps[12].anim3 = tweenOpacityTo('bottomTxt14', 0, 0).start().onComplete(function(){steps[12].anim3 = null});                       
+                    }
+                }  
+
+                if (scrollPercentInStage>0.4 && scrollPercentInStage<0.6) 
+                {
+                    if (rloop.animationStep < 14 && direction=='down')
+                    {
+                        rloop.animationStep = 14;
+                        tweenLogosOutStep1();
+                        neededActive = ['txtTitl14', 'mainTxt14' , 'bottomTxt14', '0' ];     
+                        if (steps[11].anim2) steps[11].anim2.stop();                        
+                        steps[11].anim2 = tweenOpacityTo('mainTxt13', 0, 0).start().onComplete(function(){steps[11].anim2 = null});
+
+                        if (steps[11].anim3) steps[11].anim3.stop();                        
+                        steps[11].anim3 = tweenOpacityTo('bottomTxt13', 0, 0).start().onComplete(function(){steps[11].anim3 = null});
+                        
+                        if (steps[12].anim1) steps[12].anim1.stop();
+                        steps[12].anim1 = tweenOpacityTo('txtTitl14', 1, 0).start().onComplete(function(){steps[12].anim1 = null});
+                        tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
+                        //tweenToNewGeometry(rloop.geometriesArray[13],0, 3); 
+                        //return;
+                    }
+                }
+
+                if (scrollPercentInStage>0.6)
+                {
+                    if (rloop.animationStep<14.1 && direction=='down')
+                    {          
+                        rloop.animationStep = 14.1;        
+                        neededActive = ['txtTitl14', 'mainTxt14' , 'bottomTxt14', 'txtTitl13' ];     
+                        if (steps[11].anim1) steps[11].anim1.stop();
+                        steps[11].anim1 = tweenOpacityTo('txtTitl13', 0, 0).start().onComplete(function(){steps[11].anim1 = null});
+
+                        if (steps[12].anim2) steps[12].anim2.stop();                                           
+                        steps[12].anim2 = tweenOpacityTo('mainTxt14', 1, 0).start().onComplete(function(){steps[12].anim2 = null});
+
+                        if (steps[12].anim3) steps[12].anim3.stop();                                           
+                        steps[12].anim3 = tweenOpacityTo('bottomTxt14', 1, 0).start().onComplete(function(){steps[12].anim3 = null});
+                        tweenLogosInStep2();                        
+                    }
+                }
+                break;
+
+            case 13:
+
+                if (scrollPercentInStage<0.3)
+                {
+                    if (rloop.animationStep > 14.1 && rloop.animationStep <= 15 && direction=='up')
+                    {
+                        rloop.animationStep = 14.1;
+                        tweenLogosInStep2();
+                        neededActive = ['txtTitl14', 'mainTxt14' , 'bottomTxt14', 'txtTitl15' ];   
+                        if (steps[12].anim3) steps[12].anim3.stop();                        
+                        steps[12].anim3 = tweenOpacityTo('bottomTxt14', 1, 0).start().onComplete(function(){steps[12].anim3 = null});   
+
+                        if (steps[12].anim2) steps[11].anim2.stop();                        
+                        steps[12].anim2 = tweenOpacityTo('mainTxt14', 1, 0).start().onComplete(function(){steps[12].anim2 = null});                                          
+
+                        if (steps[13].anim1) steps[13].anim1.stop();
+                        steps[13].anim1 = tweenOpacityTo('txtTitl15', 0, 0).start().onComplete(function(){steps[13].anim1 = null});                        
+                    }
+                }
+
+                if (scrollPercentInStage<0.7)
+                {
+                    if (rloop.animationStep > 15 && direction=='up')
+                    {
+                        rloop.animationStep = 15;
+                        tweenToNewGeometry(rloop.geometriesArray[12],0, 3); 
+                        neededActive = ['txtTitl15', 'mainTxt15' , 'bottomTxt15', 'txtTitl14' ];     
+                        if (steps[12].anim1) steps[12].anim1.stop();
+                        steps[12].anim1 = tweenOpacityTo('txtTitl14', 1, 0).start().onComplete(function(){steps[12].anim1 = null});                                           
+
+                        if (steps[13].anim2) steps[13].anim2.stop();                        
+                        steps[13].anim2 = tweenOpacityTo('mainTxt15', 0, 0).start().onComplete(function(){steps[13].anim2 = null});
+
+                        if (steps[13].anim3) steps[13].anim3.stop();                        
+                        steps[13].anim3 = tweenOpacityTo('bottomTxt15', 0, 0).start().onComplete(function(){steps[13].anim3 = null});                       
+                    }
+                }  
+
+                if (scrollPercentInStage>0.4 && scrollPercentInStage<0.6) 
+                {
+                    if (rloop.animationStep < 15 && direction=='down')
+                    {
+                        console.log('getting here:')
+                        rloop.animationStep = 15;
+                        tweenLogosOutStep2();
+                        neededActive = ['txtTitl14', 'mainTxt14' , 'bottomTxt14', 'txtTitl15' ];     
+                        if (steps[12].anim2) steps[12].anim2.stop();                        
+                        steps[12].anim2 = tweenOpacityTo('mainTxt14', 0, 0).start().onComplete(function(){steps[12].anim2 = null});
+
+                        if (steps[12].anim3) steps[12].anim3.stop();                        
+                        steps[12].anim3 = tweenOpacityTo('bottomTxt14', 0, 0).start().onComplete(function(){steps[12].anim3 = null});
+                        
+                        if (steps[13].anim1) steps[13].anim1.stop();
+                        steps[13].anim1 = tweenOpacityTo('txtTitl15', 1, 0).start().onComplete(function(){steps[13].anim1 = null});
+                        tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
+                        //tweenToNewGeometry(rloop.geometriesArray[13],0, 3); 
+                        //return;
+                    }
+                }
+
+                if (scrollPercentInStage>0.6)
+                {
+                    if (rloop.animationStep<15.1 && direction=='down')
+                    {          
+                        rloop.animationStep = 15.1;        
+                        neededActive = ['txtTitl14', 'mainTxt15' , 'bottomTxt15', 'txtTitl15' ];     
+                        if (steps[12].anim1) steps[12].anim1.stop();
+                        steps[12].anim1 = tweenOpacityTo('txtTitl14', 0, 0).start().onComplete(function(){steps[12].anim1 = null});
+
+                        if (steps[13].anim2) steps[13].anim2.stop();                                           
+                        steps[13].anim2 = tweenOpacityTo('mainTxt15', 1, 0).start().onComplete(function(){steps[13].anim2 = null});
+
+                        if (steps[13].anim3) steps[13].anim3.stop();                                           
+                        steps[13].anim3 = tweenOpacityTo('bottomTxt15', 1, 0).start().onComplete(function(){steps[13].anim3 = null});
+                        console.log('camini', cameraInitialPosition, ' camlook: ', cameraLookAtNeutral, 'buffini:', bufferInitialPosition, 'buffrot: ', bufferInitialRotation)
+                        tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, bufferInitialRotation);
+                        tweenToGeometryFromRandom(rloop.geometriesArray[13],0, null, false, false);                          
+                    }
+                }
+                break;
+
         }
+        TWEEN.update();
+        // verifica daca sunt cele corecte:
+        //console.log('needed active: ', neededActive)
+        $('.section-tranz').each(function(){
+            if (neededActive.indexOf(this.id)>=0)
+            {
+                //console.log('acum active: ', this.id)
+            } else {
+                this.style.opacity = 0;
+            }
+            // if (this.style.opacity>0 && this.style.opacity<1)
+            // {
+            //     //this.style.opacity = 0;
+            //     // console.log('this: ', this);
+            //     // if (idArray.indexOf(this.id)>=0) {
+            //     //     //exclude this one
+            //     // } else {
+            //     //     this.style.opacity = 0;
+            //     // }
+            // }
+        });
     }
 
     function getMiddlePointGeom4( fromThisGeom , newPosition )
@@ -2030,7 +2328,45 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             new TWEEN.Tween(logo1Array[i].scale, groupG)
                 .to({x:0, y:0, z:0}, 600)
                 .delay(i*100)
-                .easing( TWEEN.Cubic.Elastic.In )
+                .easing( TWEEN.Easing.Cubic.In )
+                .start();
+        }
+    }
+
+    function tweenLogosInStep2() {
+        groupH.removeAll();
+        for (var i=0;i<logo2Array.length;i++)
+        {
+            logo2Array[i].scale.set(0,0,0);
+            logo2Array[i].material.opacity = 0;
+            logo2Array[i].visible = true;
+
+            new TWEEN.Tween(logo2Array[i].material, groupH)
+                .to({opacity:1}, 300)
+                .delay(i*150)
+                .start();
+
+            var scaleTo = logo2Array[i].scaleTo.x;
+            new TWEEN.Tween(logo2Array[i].scale, groupH)
+                .to({x:scaleTo, y:scaleTo, z:scaleTo}, 1000)
+                .delay(i*150)
+                .easing( TWEEN.Easing.Elastic.Out )
+                .start();
+        }
+    }
+
+    function tweenLogosOutStep2() {
+        groupH.removeAll();
+        for (var i=0;i<logo2Array.length;i++)
+        {
+            new TWEEN.Tween(logo2Array[i].material, groupH)
+                .to({opacity:0}, 300)
+                .delay(i*100)
+                .start();
+            new TWEEN.Tween(logo2Array[i].scale, groupH)
+                .to({x:0, y:0, z:0}, 600)
+                .delay(i*100)
+                .easing( TWEEN.Easing.Cubic.In )
                 .start();
         }
     }
@@ -2383,11 +2719,14 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     }
 
     var coinTween;
+    var coinIsIn = false;
     function executeAfterLoadingCircle() {
         if (coinTween) coinTween.stop();
+        coinTween = null; 
+        coinIsIn = true;  
         coinObject.visible = true;
-        console.log('coin tween: ', coinObject.rotation);
-        coinTween = new TWEEN.Tween(coinObject.rotation)
+        //console.log('coin tween: ', coinObject.rotation);
+        coinTween = new TWEEN.Tween(coinObject.rotation )
             .to({y: -Math.PI/14}, 2500)
             .easing( TWEEN.Easing.Elastic.Out )
             .onComplete(function(){
@@ -2398,11 +2737,14 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
     function executeAfterExitCircle() {
         if (coinTween) coinTween.stop();
-        console.log('coin tween: ', coinObject.rotation);
-        coinTween = new TWEEN.Tween(coinObject.rotation, groupB)
+        coinIsIn = false;
+        coinTween = null;   
+        //console.log('coin tween out: ', coinObject.rotation);
+
+        coinTween = new TWEEN.Tween(coinObject.rotation)
             .to({y: Math.PI/2 - Math.PI/11.25 + Math.PI}, 500)           
             .onComplete(function(){
-                console.log('ready out!')
+                //console.log('ready out!')
                 coinObject.visible = false;
                 coinTween = null;                
             })            
@@ -2462,7 +2804,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                 z: part.destination.z
             }
 
-            var t = new TWEEN.Tween(part)
+            var t = new TWEEN.Tween(part , groupPoints)
                 //.to({x:})
                 //.to({x:[ Math.random()*part.destination.x*8-part.destination.x*2, Math.random()*part.destination.x*6-part.destination.x*4, part.destination.x], y:[Math.random()*part.destination.y*8 - part.destination.y*16, Math.random()*part.destination.y*6 - part.destination.y*12,part.destination.y], z:[Math.random()*part.destination.z*15 - part.destination.z*5, Math.random()*part.destination.z*6 - part.destination.z*4,part.destination.z]}, part.speed * rloop.speedFactor * 3000000)
                 .to({x: [destOnCircle1.x, destOnCircle2.x, destOnCircle3.x, part.destination.x], y: [destOnCircle1.y, destOnCircle2.y, destOnCircle3.y, part.destination.y], z: [destOnCircle1.z, destOnCircle2.z, destOnCircle3.z, part.destination.z]}, part.speed * 100000)
@@ -2479,7 +2821,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     countAnimations++;
                     if (countAnimations==allparticles.geometry.vertices.length)
                     {
-                        console.log('aniation complete 1 ')
+                        //console.log('aniation complete 1 ')
                         rloop.animatingTween = false;
                         startAnimationStepOut(2000);
                     }
@@ -2493,6 +2835,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     {
         //return;
         //console.log('running this')
+        groupPoints.removeAll();
         TWEEN.removeAll();
         rloop.idleWithParticles = false;
         time = 0;
@@ -2547,7 +2890,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                 part.dest2.x = part.destTemp.x;
                 var duration = ordered ? (countOnlyAnimated * 50 + 400) : part.speed * 50000;
                 //console.log('going to destination: ', part.dest2.x);
-                var t = new TWEEN.Tween(part)
+                var t = new TWEEN.Tween(part, groupPoints)
                     .to({x:part.dest2.x+2.5}, duration)
                     .delay(wait)
                     .easing( TWEEN.Easing.Cubic.InOut )
@@ -2579,7 +2922,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
     function tweenToGeometryFromRandom(newGeometry, wait, runAfterFinish, ordered, iterate)
     {   
-        TWEEN.removeAll();
+        //TWEEN.removeAll();
+        groupPoints.removeAll();
         rloop.idleWithParticles = false;
         time = 0;
         //WE ALREADY HAVE THE BUFFER GEOMETRY IF WE STOPPED THE ANIMATION EARLIER
@@ -2592,7 +2936,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
         var vertDifference = newParticles.vertices.length - allparticles.geometry.vertices.length;
         vertDifference = newParticles.vertices.length - rloop.bufferParticles.geometry.attributes.position.length/3
-        console.log('buffer poz: ',rloop.bufferParticles.geometry.attributes.position.length/3, ', vert dif: ', vertDifference)
+        //console.log('buffer poz: ',rloop.bufferParticles.geometry.attributes.position.length/3, ', vert dif: ', vertDifference)
         for (var q = 0; q< allparticles.geometry.vertices.length;q++)
         {
             allparticles.geometry.vertices[q].markedDelete = false;
@@ -2603,7 +2947,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             //console.log('taking from array: ', rloop.particles.geometry.vertices, ' a total of: ', Math.abs(vertDifference))
             var tempArr = [];
             if (iterate) {
-                console.log('iterating...');
+                //console.log('iterating...');
                 tempArr = rloop.particles.geometry.vertices.slice(0, vertDifference)
             } else tempArr = getRandom(rloop.particles.geometry.vertices, Math.abs(vertDifference));
             //console.log('temp array length: ', tempArr.length)
@@ -2618,7 +2962,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             
             if (vertDifference>0){                               //we need more particles, mark for adding (add some neutral ones)
                 addMoreParticles( vertDifference );
-                console.log('adding particles: ', vertDifference, rloop.geometriesArray[7]);
+                //console.log('adding particles: ', vertDifference, rloop.geometriesArray[7]);
                 updateTheBufferGeometryToMoreParticles( vertDifference );
             }
         }
@@ -2685,7 +3029,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
             var duration = ordered ? part.dest2.x * 100 : part.speed * 50000;
 
-            var t = new TWEEN.Tween(part)
+            var t = new TWEEN.Tween(part, groupPoints)
                 .to({x:part.dest2.x, y:part.dest2.y, z:part.dest2.z, alpha:part.dest2.alpha, size: part.dest2.size, r: part.dest2.r, g: part.dest2.g, b: part.dest2.b}, duration)
                 .delay(wait)
                 .easing( TWEEN.Easing.Cubic.InOut )
@@ -2734,7 +3078,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     function tweenToNewGeometry( newGeometry, wait, randomFactor )
     {
         //console.log('starting new animation:')
-        TWEEN.removeAll();
+        //TWEEN.removeAll();
+        groupPoints.removeAll();
         if (wait == undefined || wait == null) wait = 0;
         if (randomFactor == undefined || randomFactor == null) randomFactor = 1;
 
@@ -2746,11 +3091,11 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
         vertDifference = newParticles.vertices.length - rloop.bufferParticles.geometry.attributes.position.length/3;
         //console.log('vert difference: ', vertDifference);
-        console.log('buffer poz: ',rloop.bufferParticles.geometry.attributes.position.length/3, ', vert dif: ', vertDifference)
+        //console.log('buffer poz: ',rloop.bufferParticles.geometry.attributes.position.length/3, ', vert dif: ', vertDifference)
         if (vertDifference<0)                                       // we need less particles, mark them for deletion
         {
-            console.log('buffer geometry length: ', rloop.bufferParticles.geometry.attributes.position.length/3);
-            console.log('rloop.particles.geometry: ', rloop.particles.geometry.vertices.length, ' difference: ', Math.abs(vertDifference));
+            //console.log('buffer geometry length: ', rloop.bufferParticles.geometry.attributes.position.length/3);
+            //console.log('rloop.particles.geometry: ', rloop.particles.geometry.vertices.length, ' difference: ', Math.abs(vertDifference));
             var tempArr = getRandom(rloop.particles.geometry.vertices, Math.abs(vertDifference));
             for (var j=0;j<tempArr.length;j++)
             {
@@ -2815,7 +3160,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             
 
             //console.log('going to x: ', dest);
-            var t = new TWEEN.Tween(part)
+            var t = new TWEEN.Tween(part , groupPoints)
                 .to({x:dest.x, y:dest.y, z:dest.z, alpha:dest.alpha, size: dest.size}, part.speed * 60000)
                 .delay(wait)
                 .easing( TWEEN.Easing.Cubic.InOut )
@@ -2922,7 +3267,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             part.i = par;
             part.opacity = 1;
             var alpha =( part.markedDelete) ? 0 : 1;
-            var t = new TWEEN.Tween(part)
+            var t = new TWEEN.Tween(part, groupPoints)
                 .to({x:dest.x, y:dest.y, z:dest.z, alpha:alpha}, part.speed * 20000)
                 .delay(wait)
                 .easing( TWEEN.Easing.Cubic.InOut )
@@ -2953,7 +3298,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         if (countNewAnimations<newParticles.vertices.length){
                             this._object.color = newParticles.vertices[countNewAnimations].color;
 
-                            var t1 = new TWEEN.Tween(this._object)
+                            var t1 = new TWEEN.Tween(this._object , groupPoints)
                                 .to({x:newParticles.vertices[countNewAnimations].x, y:newParticles.vertices[countNewAnimations].y, z:newParticles.vertices[countNewAnimations].z}, part.speed * 30000 )
                                 .easing( TWEEN.Easing.Cubic.InOut )
                                 .onUpdate(function() {
@@ -2978,7 +3323,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                                     {
                                         //console.log('new  color: ',compare8uint[0], 'current : ',rloop.bufferParticles.geometry.attributes.customColor.array[this.i*3], compare8uint[0] == rloop.bufferParticles.geometry.attributes.customColor.array[this.i*3]);
                                         this._object.dummy = 1;
-                                        var t2 = new TWEEN.Tween(this._object)
+                                        var t2 = new TWEEN.Tween(this._object , groupPoints)
                                             .to({dummy:1}, Math.round(Math.random()*1000))
                                             .delay(Math.round(Math.random()*1000) + 1500)
                                             .onComplete(function()
@@ -3065,7 +3410,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     // }
 
     function tweenOpacityTo(divId, toOpacity, waitMili, speed)
-    {
+    {   
+        if (waitMili==null || waitMili == undefined) waitMili = 0;
         if (speed == null || speed == undefined) speed = 400;
         var twEl = document.getElementById(divId);
         //console.log("can't find: ", twEl);
@@ -3182,7 +3528,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                 vert.y = Math.random() * 1000 - 500;
                 vert.z = Math.random() * 500 //- 500;
                 vert.destination = {
-                    x: (center.x+xDistance/2) + (raza1 + xDistance*i) * Math.sin(2*j*Math.PI/spritesPerCircle + distort*i),
+                    //x: (center.x + xDistance*i / 2) + (raza1 + xDistance*i) * Math.sin(2*j*Math.PI/spritesPerCircle + distort*i),
+                    x: (center.x ) + (raza1 + xDistance*i) * Math.sin(2*j*Math.PI/spritesPerCircle + distort*i),
                     y: (center.y) + (raza1 + xDistance*i) * Math.cos(2*j*Math.PI/spritesPerCircle + distort*i),
                     z: (center.z) + (-zDistance*i)
                 }
@@ -3411,23 +3758,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
         //console.log('particles: ', particles);
         return bufferParticles;
-    }
-   
-    function thisAnimationFinished(currentStep, direction)
-    {
-        //console.log('going to next animation: ')
-        rloop.animationStep = currentStep + direction;
-
-        switch (currentStep)
-        {
-            case 0:
-                animateOut(currentStep);
-                break;
-            case 1:
-                break;
-
-        }
-    }
+    }   
+    
 
     function animateOut(currentStep)
     {

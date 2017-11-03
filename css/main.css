@@ -59,7 +59,7 @@ main {
         cursor: pointer;
     }
 
-    #pre-block, #post-block1, #post-block2, #post-block3, #post-block4 {
+    #pre-block, #post-block1, #post-block2, #post-block3, #post-block4, #post-block31 {
         position: absolute;
         left: 0px;
         right: 0px;
@@ -108,6 +108,28 @@ main {
     }
     
     #post-block4 input[type="submit"] {
+        background-color: rgb(0, 252, 254);
+        text-transform: uppercase;
+        padding-left: 1em;
+        padding-right: 1em;
+        margin: 0px;
+    }
+
+    #post-block5 input[type="email"], #post-block5 input[type="submit"] {
+        box-sizing: border-box;
+        border: 1px solid rgb(0, 252, 254);
+        font-family: inherit;
+        font-size: inherit;
+        padding: 0.2em;
+        color: rgb(51, 52, 56);
+        margin: 0px;
+    }
+
+    #post-block5 input[type="email"] {
+        width: 13em;
+    }
+    
+    #post-block5 input[type="submit"] {
         background-color: rgb(0, 252, 254);
         text-transform: uppercase;
         padding-left: 1em;
@@ -291,6 +313,25 @@ main {
     top: 0; left: 5vw; bottom: 0; 
     width: 49vw;
     height: 59vh;
+}
+
+
+.left-end-text {
+    /*margin: auto;
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    bottom: 0; 
+    top: 0; left: 0; bottom: 0; right: 0;*/
+
+    width: 33vw;
+    height: 43vh;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }
 
 #coin {
@@ -654,6 +695,76 @@ main {
     font-weight: 300;
 
     margin-top: 1vh;
+    line-height: 1.25;
+    font-size: 1.4vw;
+    /*width: 40vw;*/
+}
+
+#txtTitl14 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    color: rgb(0, 252, 254);
+}
+
+#mainTxt14 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+}
+
+#bottomTxt14 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: left;
+    opacity: 0;
+    font-family: 'Roboto Slab';
+    font-weight: 300;
+
+    margin-top: 1vh;
+    line-height: 1.25;
+    font-size: 1.4vw;
+    /*width: 40vw;*/
+}
+
+#txtTitl15 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+    opacity: 0;
+    color: rgb(0, 252, 254);
+}
+
+#mainTxt15 {
+    margin-top: 2vh;
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+    opacity: 0;
+}
+
+#post-block31 {
+    color: rgb(0, 252, 254);
+    opacity: 1;
+    text-align: center;
+}
+
+#bottomTxt15 {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+    opacity: 0;
+
+    margin-top: 2vh;
     line-height: 1.25;
     font-size: 1.4vw;
     /*width: 40vw;*/
