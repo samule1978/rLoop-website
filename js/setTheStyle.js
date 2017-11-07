@@ -516,7 +516,7 @@ define([], function() {
   	}
 
   	function set_css(elem_id, style) {
-  		console.log('elem_id:', elem_id);
+  		//console.log('elem_id:', elem_id);
 	  var elem = id(elem_id);
 	  for (var prop in style) {
 	    elem.style[prop] = style[prop];

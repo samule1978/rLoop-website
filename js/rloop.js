@@ -997,6 +997,14 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             anim5:null
         }
     ];
+
+
+    function gotoPageAndFade ( goTo, goFrom )
+    {
+        
+    }
+
+
     var neededActive = ['0','0','0','0'];
     function sliderUpdate ( event )
     {

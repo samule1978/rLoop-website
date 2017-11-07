@@ -163,8 +163,16 @@ main {
 }
 
 #header {
+   /* z-index: 10000;
+    position: fixed;
+*/
+
+
     z-index: 10000;
     position: fixed;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
 #webGLContent {
@@ -768,4 +776,35 @@ main {
     line-height: 1.25;
     font-size: 1.4vw;
     /*width: 40vw;*/
+}
+
+.screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#btnDown {
+    position: absolute;
+    width: 4vw;
+    height: 4vw;
+    bottom: 4vw;
+    right: 4vw;
+    background: url(../img/btn/arrow.png) no-repeat center center;
+    background-size: cover;
+    /* background-color: #FFF; */
+    cursor: pointer;
+    pointer-events: auto;
+    opacity: 0.65;
+
+    -webkit-transition: opacity 0.4s;
+    -moz-transition: opacity 0.4s;
+    -ms-transition: opacity 0.4s;
+    -o-transition: opacity 0.4s;
+    transition: opacity 0.4s;
+}
+
+#btnDown:hover {
+    opacity: 1;
 }
