@@ -99,7 +99,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     var groupA, groupB, groupC, groupD, groupE, groupF, groupG, groupH, groupPoints; 
 
     var defaultPixedSize = 1;
-
+    var slides;
     var circleCenter = new THREE.Vector3(15, 0, 0);
 
     /*** public function ***/
@@ -119,12 +119,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         //jq("#header").sticky({topSpacing:0, zIndex:10000});
         //jq("#coin").sticky({topSpacing:0, zIndex:10005});
 
-        scrollMagicController = new ScrollMagic.Controller({
-            globalSceneOptions: {
-                triggerHook: 'onLeave',
-
-            }
-        });
+        
         
         var timer;
         var scrolling = false;
@@ -138,43 +133,67 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         //     //console.log('stopped scrolling');
         // }
 
-        var slides = document.querySelectorAll("section.pageClass")
-        for (var i=0; i<slides.length; i++) {
-            new ScrollMagic.Scene({
-                    triggerElement: slides[i]
-                })
-                .setPin(slides[i])
-                .addIndicators() // add indicators (requires plugin)
-                .on('enter', function (e){
-                    //leavingScene( e );
-                    
-                    startScene( e );
-                })
-                .on('start' , function (e){
-                    leavingScene ( e );
-                })
-                .on('progress', function (e) {
-                    progressInScene()
-                })
-                .on('update', function (e) {
-                    var currentMoving = parseInt($(e.target.triggerElement()).attr('id').split('pag')[1]) - 1;
-                    //console.log('current moving: ', currentMoving, 'current stage: ', currentStage)
-                    if (currentMoving != currentStage) return;
-                    sliderUpdate(e);
-                    // var timer2 = setTimeout ( function (){
-                    //     if (!scrolling)
-                    //     {
-                            
-                    //         //console.log('update, ',e);
-                    //     }
-                    // }, 100);                    
-                } )
-                .on('shift', function(e){
-                    //console.log('shifted: ', $(e.target.triggerElement()).attr('id') );
-                })
-                .addTo(scrollMagicController);
+        if ( true )
+        {
+            scrollMagicController = new ScrollMagic.Controller({
+                globalSceneOptions: {
+                    triggerHook: 'onLeave',
+
+                }
+            });            
+
+            slides = document.querySelectorAll("section.pageClass")
+            for (var i=0; i<slides.length; i++) {
+                new ScrollMagic.Scene({
+                        triggerElement: slides[i]
+                    })
+                    .setPin(slides[i])
+                    //.addIndicators() // add indicators (requires plugin)
+                    .on('enter', function (e){
+                        //leavingScene( e );
+                        
+                        startScene( e );
+                    })
+                    .on('start' , function (e){
+                        leavingScene ( e );
+                    })
+                    .on('progress', function (e) {
+                        progressInScene()
+                    })
+                    .on('update', function (e) {
+                        var currentMoving = parseInt($(e.target.triggerElement()).attr('id').split('pag')[1]) - 1;
+                        //console.log('current moving: ', currentMoving, 'current stage: ', currentStage)
+                        if (currentMoving != currentStage) return;
+                        sliderUpdate(e);
+
+                        // var timer2 = setTimeout ( function (){
+                        //     if (!scrolling)
+                        //     {
+                                
+                        //         //console.log('update, ',e);
+                        //     }
+                        // }, 100);                    
+                    } )
+                    .on('shift', function(e){
+                        //console.log('shifted: ', $(e.target.triggerElement()).attr('id') );
+                    })
+                    .addTo(scrollMagicController);
+            }
+
+            // scrollMagicController.scrollTo( function(newpos){
+
+            //     console.log('section to scroll to: ', $('#'+newpos));
+            //     // new TWEEN.Tween(window)
+            //     //     .to({scrollTo:{y:newpos}});
+
+            // });
+
+            scrollMagicController.enabled(false);
         }
-        scrollMagicController.enabled(false);
+
+        
+
+
 
         rloop.mobile = isMobile;
         rloop.portrait = portrait;
@@ -259,7 +278,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         //console.log('start interval')
         t = setInterval(function() {
             if (imageSteps.length == countLoading) {
-                console.log('steps loaded: ', loadedSteps);
+                //console.log('steps loaded: ', loadedSteps);
                 clearInterval(t);
                 rloop.animationStep = 0;
                 generateAllGeometries();
@@ -275,12 +294,101 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             }
         }, 500)
 
-        //addEvents();
+        addEvents();
         onWindowResize();
         window.addEventListener( 'resize', onWindowResize, false );
         rloop.Animate();
     }
 
+    var currentPage = 0;
+
+    function addEvents()
+    {
+        $('#logoCont').on('click', function(e){
+            //click on logo
+            currentPage = 0;
+            gotoPageAndFade(0, -1);
+        })
+
+        $('#roadmapBtn').on('click', function (e){
+            var url = 'pdf/roadmap.pdf';
+            window.open(url,'_blank');
+            //Clicked on road map
+        })
+
+        $('#watchVideoBtn').on('click', function (e){
+            var url = 'http://c.brightcove.com/services/viewer/htmlFederated?&width=620&height=363&flashID=myExperience5266210989001&identifierClassName=BrightcoveExperienceID_9508&bgcolor=%23000000&playerID=default&playerKey=AQ~~%2CAAABNbwiBqk~%2CuKJgjFOOWvE3WByT-ymNV7DaGn-7XkD6&isVid=true&isUI=true&dynamicStreaming=true&autoStart=true&wmode=transparent&%40videoPlayer=5266210989001&htmlFallback=true&includeAPI=true&templateLoadHandler=myTemplateLoaded&templateReadyHandler=onTemplateReady&debuggerID=&startTime=1508359072844&refURL=not%20available';
+            window.open(url,'_blank');
+            //Clicked on road map
+        })
+
+        $('#watchVideoBtn2').on('click', function (e){
+            var url = 'https://www.youtube.com/watch?v=C0wcdmJ_2ks&feature=youtu.be';
+            window.open(url,'_blank');
+            //Clicked on road map
+        })
+
+        //watchVideoBtn
+
+        $('#btnh1').on('click', function(e){
+            //Clicked on reddit
+            var url = 'https://www.reddit.com/r/rLoop/';
+            window.open(url,'_blank');
+            
+        })
+
+        $('#btnh2').on('click', function(e){
+            //Clicked on youtube
+            var url = 'https://www.youtube.com/channel/UCFxqcu0vH567d1F09xso8Tg';
+            window.open(url,'_blank');
+            
+        })
+
+        $('#btnh3').on('click', function(e){
+            //Clicked on twitter
+            var url = 'https://twitter.com/rLoopTeam';
+            window.open(url,'_blank');
+            
+        })
+
+        $('#btnh4').on('click', function(e){
+            var url = 'pdf/rLoop_one_pager.pdf';
+            window.open(url,'_blank');
+            //Clicked on one pager
+        })
+
+        document.getElementById('btnDown').addEventListener('click', function(event){
+            var nextPage = currentPage + 1 < slides.length ? currentPage+1 : -1;
+            if (nextPage >=0) {
+                gotoPageAndFade(nextPage, currentPage);
+                currentPage = nextPage;
+            }
+        });
+
+        document.getElementById('btnUp').addEventListener('click', function(event){
+            var nextPage = currentPage - 1 >= 0 ? currentPage - 1 : -1;
+            if (nextPage >=0) {
+                gotoPageAndFade(nextPage, currentPage);
+                currentPage = nextPage;
+            }
+        });
+
+        document.addEventListener('wheel', function(event){
+            var nextPage;
+            if (event.deltaY > 0)
+            {
+                nextPage = currentPage + 1 < slides.length ? currentPage+1 : -1;
+            } else {
+                nextPage = currentPage - 1 >= 0 ? currentPage - 1 : -1;
+            }
+
+            if (nextPage >=0) {
+                gotoPageAndFade(nextPage, currentPage);
+                currentPage = nextPage;
+            }
+            //console.log('scroll event: ', event);
+        })
+    }
     
     function generateAllGeometries()
     {
@@ -1001,7 +1109,37 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
     function gotoPageAndFade ( goTo, goFrom )
     {
-        
+        var btnUp = document.getElementById('btnUp');
+        var btnDown = document.getElementById('btnDown');
+        if (goTo >= 1 && btnUp.style.opacity<0.65) btnUp.style.opacity = 0.65;
+        if (goTo < 1 && btnUp.style.opacity>0) btnUp.style.opacity = 0;
+
+        if (goTo == slides.length-1 && btnDown.style.opacity>0) btnDown.style.opacity = 0;
+        if (goTo < slides.length-1 && btnDown.style.opacity<0.65) btnDown.style.opacity = 0.65;
+
+        var sectionIdTo = 'pag'+(goTo+1);
+        var sectionIdFrom = 'pag'+(goFrom+1);
+        //console.log('section to scroll to, from: ', $('#'+sectionIdTo), $('#'+sectionIdFrom));
+        var d = jq('#'+sectionIdTo);
+        console.log('d: ', jq(d).offsetParent);
+        //var topPos = d.offsetTop;
+        //scrollMagicController.scrollTo(sectionIdTo);
+        var scrollDist = goTo * window.innerHeight ;
+        //console.log('scroll dist: ', scrollDist) ;
+
+        var scrollFrom = {y: document.documentElement.scrollTop};
+
+        new TWEEN.Tween(scrollFrom)
+             .to({y:scrollDist}, 1500)
+             .easing( TWEEN.Easing.Cubic.Out )
+             .onUpdate(function(){
+                //console.log('this: ', this._object.y);
+                window.scrollTo(0, this._object.y);
+             })
+             .start();
+        // if (window.history && window.history.pushState) {
+        //     history.pushState("", document.title, sectionIdTo);
+        // }
     }
 
 
@@ -1897,7 +2035,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 12 && direction=='up')
                     {
                         rloop.animationStep = 12;
-                        neededActive = ['txtTitl11', 'mainTxt12' , 'bottomTxt12', 'txtTitl12' ];
+                        neededActive = ['txtTitl11', 'mainTxt12' , 'bottomTxt12', 'txtTitl12', 'watchVideoBtn2' ];
                         if (steps[9].anim1) steps[9].anim1.stop();
                         steps[9].anim1 = tweenOpacityTo('txtTitl11', 1, 0).start().onComplete(function(){steps[9].anim1 = null});                        
                        
@@ -1906,7 +2044,11 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         steps[10].anim2 = tweenOpacityTo('mainTxt12', 0, 0).start().onComplete(function(){steps[10].anim2 = null});
 
                         if (steps[10].anim3) steps[10].anim3.stop();                        
-                        steps[10].anim3 = tweenOpacityTo('bottomTxt12', 0, 0).start().onComplete(function(){steps[10].anim3 = null});                       
+                        steps[10].anim3 = tweenOpacityTo('bottomTxt12', 0, 0).start().onComplete(function(){steps[10].anim3 = null});
+
+                        if (steps[10].anim4) steps[10].anim4.stop();                                           
+                        steps[10].anim4 = tweenOpacityTo('watchVideoBtn2', 0, 0).start().onComplete(function(){steps[10].anim4 = null});
+
                         tweenToNewGeometry(rloop.geometriesArray[11],0, 3); 
                         //return;
                     }
@@ -1937,7 +2079,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep<12.1 && direction=='down')
                     {          
                         rloop.animationStep = 12.1;        
-                        neededActive = ['txtTitl12', 'mainTxt12' , 'bottomTxt12', 'txtTitl11' ,' test' ];
+                        neededActive = ['txtTitl12', 'mainTxt12' , 'bottomTxt12', 'txtTitl11' ,' test', 'watchVideoBtn2'];
                         if (steps[9].anim1) steps[9].anim1.stop();
                         steps[9].anim1 = tweenOpacityTo('txtTitl11', 0, 0).start().onComplete(function(){steps[9].anim1 = null});
 
@@ -1946,6 +2088,9 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
                         if (steps[10].anim3) steps[10].anim3.stop();                                           
                         steps[10].anim3 = tweenOpacityTo('bottomTxt12', 1, 0).start().onComplete(function(){steps[10].anim3 = null});
+
+                        if (steps[10].anim4) steps[10].anim4.stop();                                           
+                        steps[10].anim4 = tweenOpacityTo('watchVideoBtn2', 1, 0).start().onComplete(function(){steps[10].anim4 = null});
                        
                         var fPartPoz = new THREE.Vector3(31,0,-60);
                         var fPartRot = new THREE.Vector3(-Math.PI/64,-Math.PI/6.3,0);
@@ -1965,12 +2110,15 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep > 12.1 && rloop.animationStep <= 13 && direction=='up')
                     {
                         rloop.animationStep = 12.1;
-                        neededActive = ['txtTitl12', 'mainTxt12' , 'bottomTxt12', 'txtTitl13' ];         
+                        neededActive = ['txtTitl12', 'mainTxt12' , 'bottomTxt12', 'txtTitl13', 'watchVideoBtn2' ];         
                         if (steps[10].anim3) steps[10].anim3.stop();                        
                         steps[10].anim3 = tweenOpacityTo('bottomTxt12', 1, 0).start().onComplete(function(){steps[10].anim3 = null});   
 
                         if (steps[10].anim2) steps[10].anim2.stop();                        
-                        steps[10].anim2 = tweenOpacityTo('mainTxt12', 1, 0).start().onComplete(function(){steps[10].anim2 = null});                                          
+                        steps[10].anim2 = tweenOpacityTo('mainTxt12', 1, 0).start().onComplete(function(){steps[10].anim2 = null});  
+
+                        if (steps[10].anim4) steps[10].anim4.stop();                                           
+                        steps[10].anim4 = tweenOpacityTo('watchVideoBtn2', 1, 0).start().onComplete(function(){steps[10].anim4 = null});                                        
 
                         if (steps[11].anim1) steps[11].anim1.stop();
                         steps[11].anim1 = tweenOpacityTo('txtTitl13', 0, 0).start().onComplete(function(){steps[11].anim1 = null});
@@ -2009,12 +2157,15 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     {
                         rloop.animationStep = 13;
 
-                        neededActive = ['txtTitl13', 'mainTxt12' , 'bottomTxt12', '0' ];     
+                        neededActive = ['txtTitl13', 'mainTxt12' , 'bottomTxt12', 'watchVideoBtn2' ];     
                         if (steps[10].anim2) steps[10].anim2.stop();                        
                         steps[10].anim2 = tweenOpacityTo('mainTxt12', 0, 0).start().onComplete(function(){steps[10].anim2 = null});
 
                         if (steps[10].anim3) steps[10].anim3.stop();                        
                         steps[10].anim3 = tweenOpacityTo('bottomTxt12', 0, 0).start().onComplete(function(){steps[10].anim3 = null});
+
+                        if (steps[10].anim4) steps[10].anim4.stop();                                           
+                        steps[10].anim4 = tweenOpacityTo('watchVideoBtn2', 0, 0).start().onComplete(function(){steps[10].anim4 = null});
                         
                         if (steps[11].anim1) steps[11].anim1.stop();
                         steps[11].anim1 = tweenOpacityTo('txtTitl13', 1, 0).start().onComplete(function(){steps[11].anim1 = null});
@@ -3382,6 +3533,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
                                         document.getElementById('main').style.height = '100vh';
                                         document.getElementById('main').style.display = 'block';
+
+                                        document.getElementById('btnDown').style.opacity = 0.65;
                                         scrollMagicController.enabled(true);
                                         addWheelEventsAfterStep1();
 

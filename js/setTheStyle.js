@@ -336,6 +336,7 @@ define([], function() {
           mobility
         ))
       });
+      
       set_css('bottomTxt211', {
         lineHeight: 1.5,
         fontSize: len(blend(
