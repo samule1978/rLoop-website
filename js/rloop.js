@@ -1209,6 +1209,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         var scrollFrom = {y: window.scrollY};
         //console.log('scrolling from: ', window.scrollY);
         tweeningPageAvailable = false;
+        if (false) {
             pageTween.stop();
             pageTween = null;
         } else 
@@ -4157,6 +4158,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         console.log('running timer')
         var tim = setTimeout(function(){
             enableNext = true;
+        }, 500);
     }
 
     function onWindowResize(){
