@@ -275,17 +275,18 @@
     <!-- navigation -->
     <div id="menuContent"></div>
     <script type="text/javascript">jq=jQuery;</script>
+
     <script type="x-shader/x-vertex" id="vertexshader">
         attribute float alpha;
         varying float vAlpha;
+        varying vec3 vColor;
         void main() {
             vAlpha = alpha;
             vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
             gl_PointSize = 8.0;
-            gl_PointSize*=innerHeight;
             gl_Position = projectionMatrix * mvPosition;
         }
-    </script>
+    </script> 
 
     <script type="x-shader/x-fragment" id="fragmentshader">
         uniform vec3 color;

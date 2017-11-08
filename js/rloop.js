@@ -85,6 +85,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     var iconObjectStep2;
     var coinObject;
 
+    var slidesScenes = [];
     var logo1Array = [];
     var logo2Array = [];
     var logo1Object;
@@ -101,6 +102,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     var defaultPixedSize = 1;
     var slides;
     var circleCenter = new THREE.Vector3(15, 0, 0);
+    var enableNext = true;
 
     /*** public function ***/
 
@@ -143,8 +145,9 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             });            
 
             slides = document.querySelectorAll("section.pageClass")
+            
             for (var i=0; i<slides.length; i++) {
-                new ScrollMagic.Scene({
+                var s =new ScrollMagic.Scene({
                         triggerElement: slides[i]
                     })
                     .setPin(slides[i])
@@ -178,6 +181,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         //console.log('shifted: ', $(e.target.triggerElement()).attr('id') );
                     })
                     .addTo(scrollMagicController);
+                slidesScenes.push(s);
             }
 
             // scrollMagicController.scrollTo( function(newpos){
@@ -191,8 +195,9 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             scrollMagicController.enabled(false);
         }
 
-        
-
+        setTheStyle.set_layout();
+        console.log('runnging');
+        //return;
 
 
         rloop.mobile = isMobile;
@@ -233,7 +238,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         groupH = new TWEEN.Group();
         groupPoints = new TWEEN.Group();
 
-        setTheStyle.set_layout();
+        
 
         prevValue.width = window.innerWidth;
         prevValue.height = window.innerHeight;
@@ -294,7 +299,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             }
         }, 500)
 
-        addEvents();
+        //addEvents();
         onWindowResize();
         window.addEventListener( 'resize', onWindowResize, false );
         rloop.Animate();
@@ -360,6 +365,11 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         document.getElementById('btnDown').addEventListener('click', function(event){
             var nextPage = currentPage + 1 < slides.length ? currentPage+1 : -1;
             if (nextPage >=0) {
+                //console.log('enableNext: ', enableNext);
+                if (enableNext) {
+                    runTimer();                    
+                }
+                else return;
                 gotoPageAndFade(nextPage, currentPage);
                 currentPage = nextPage;
             }
@@ -368,12 +378,19 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         document.getElementById('btnUp').addEventListener('click', function(event){
             var nextPage = currentPage - 1 >= 0 ? currentPage - 1 : -1;
             if (nextPage >=0) {
+                if (enableNext) {
+                    runTimer();                    
+                }
+                else return;
                 gotoPageAndFade(nextPage, currentPage);
                 currentPage = nextPage;
             }
         });
 
-        document.addEventListener('wheel', function(event){
+        window.addEventListener('wheel', function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            //console.log('enable next: ', enableNext);
             var nextPage;
             if (event.deltaY > 0)
             {
@@ -383,9 +400,58 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             }
 
             if (nextPage >=0) {
+                if (enableNext) {
+                    runTimer();                    
+                }
+                else return;
+                console.log('goin to: ', nextPage);
                 gotoPageAndFade(nextPage, currentPage);
                 currentPage = nextPage;
             }
+            //console.log('scroll event: ', event);
+        });
+
+        $(window).on('touchstart', function(e)
+        {
+            // if ($(e.target).closest('#mobileMenuHeader').length == 1)
+            // {
+            //     blockMenuHeaderScroll = true;
+            // }
+        });
+        $(window).on('touchend', function()
+        {
+            //blockMenuHeaderScroll = false;
+        });
+        $(window).on('touchmove', function(e)
+        {
+            //console.log('touch here');
+            e.preventDefault();
+            // if (blockMenuHeaderScroll)
+            // {
+            //     e.preventDefault();
+            // }
+        });
+
+        document.addEventListener('scroll', function(event){
+            
+            event.preventDefault();
+            //var nextPage;
+            //console.log('event: ', event);
+            // if (event.deltaY > 0)
+            // {
+            //     nextPage = currentPage + 1 < slides.length ? currentPage+1 : -1;
+            // } else {
+            //     nextPage = currentPage - 1 >= 0 ? currentPage - 1 : -1;
+            // }
+
+            // if (nextPage >=0) {
+            //     if (enableNext) {
+            //         runTimer();                    
+            //     }
+            //     else return;
+            //     gotoPageAndFade(nextPage, currentPage);
+            //     currentPage = nextPage;
+            // }
             //console.log('scroll event: ', event);
         })
     }
@@ -594,12 +660,16 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         rloop.renderer.setSize(w, h);
         rloop.renderer.domElement.id = 'webGLCanv';
 
+       
+
         rloop.renderer.setClearColor(0x000000, 0 );
 
         rloop.renderer.gammaInput = true;
         rloop.renderer.gammaOutput = true;
 
         cont.appendChild(rloop.renderer.domElement);
+
+         cont.getShaderInfoLog = function () { return '' };
     }
 
     function addCamera3D() {
@@ -1106,11 +1176,18 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         }
     ];
 
+    var tweeningPageAvailable = true;
+    var pageTween = null;
 
     function gotoPageAndFade ( goTo, goFrom )
     {
+        
         var btnUp = document.getElementById('btnUp');
         var btnDown = document.getElementById('btnDown');
+
+        var pag2bg = parseInt(document.getElementById('pag2').style.top.split('px')[0]);
+
+        if (goTo>=2 && pag2bg<0) document.getElementById('pag2').style.top = '0px';
         if (goTo >= 1 && btnUp.style.opacity<0.65) btnUp.style.opacity = 0.65;
         if (goTo < 1 && btnUp.style.opacity>0) btnUp.style.opacity = 0;
 
@@ -1120,21 +1197,30 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         var sectionIdTo = 'pag'+(goTo+1);
         var sectionIdFrom = 'pag'+(goFrom+1);
         //console.log('section to scroll to, from: ', $('#'+sectionIdTo), $('#'+sectionIdFrom));
-        var d = jq('#'+sectionIdTo);
-        console.log('d: ', jq(d).offsetParent);
+        var d = slidesScenes[goTo].scrollOffset();
+
+        //console.log('d: ', slidesScenes[goTo].scrollOffset());
         //var topPos = d.offsetTop;
         //scrollMagicController.scrollTo(sectionIdTo);
         var scrollDist = goTo * window.innerHeight ;
         //console.log('scroll dist: ', scrollDist) ;
 
-        var scrollFrom = {y: document.documentElement.scrollTop};
-
-        new TWEEN.Tween(scrollFrom)
-             .to({y:scrollDist}, 1500)
+        //var scrollFrom = {y: document.documentElement.scrollTop};
+        var scrollFrom = {y: window.scrollY};
+        //console.log('scrolling from: ', window.scrollY);
+        tweeningPageAvailable = false;
+            pageTween.stop();
+            pageTween = null;
+        } else 
+            pageTween = new TWEEN.Tween(scrollFrom)
+             .to({y:d}, 1000)
              .easing( TWEEN.Easing.Cubic.Out )
              .onUpdate(function(){
                 //console.log('this: ', this._object.y);
                 window.scrollTo(0, this._object.y);
+             })
+             .onComplete(function(){
+                pageTween = null;
              })
              .start();
         // if (window.history && window.history.pushState) {
@@ -2319,7 +2405,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                 {
                     if (rloop.animationStep < 15 && direction=='down')
                     {
-                        console.log('getting here:')
+                        //console.log('getting here:')
                         rloop.animationStep = 15;
                         tweenLogosOutStep2();
                         neededActive = ['txtTitl14', 'mainTxt14' , 'bottomTxt14', 'txtTitl15' ];     
@@ -3537,6 +3623,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                                         document.getElementById('btnDown').style.opacity = 0.65;
                                         scrollMagicController.enabled(true);
                                         addWheelEventsAfterStep1();
+                                        addEvents();
 
                                        
                                         //rloop.scene.add(rloop.bufferParticles);
@@ -3749,6 +3836,19 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             //alphaTest: 0.1
             //map: sprite
         })
+
+        // var shaderMaterial = new THREE.ShaderMaterial( {
+
+        //     uniforms:       uniforms,
+        //     vertexShader: document.getElementById( 'vertexshader' ).textContent,
+        //     fragmentShader: document.getElementById( 'fragmentshaderP' ).textContent,
+        //     blending: THREE.AdditiveBlending,
+        //     depthTest: false,
+        //     depthWrite:false,
+        //     transparent: true
+
+        // } );
+
 
 
         //console.log('got data: ', imgData, 'img: ', img);
@@ -4050,6 +4150,15 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         return result;
     }
 
+    
+    function runTimer()
+    {
+        enableNext = false;
+        console.log('running timer')
+        var tim = setTimeout(function(){
+            enableNext = true;
+    }
+
     function onWindowResize(){
         //console.log('resized');
         setTheStyle.set_layout();
@@ -4101,7 +4210,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         //console.log('fromValue: ', prevValue, 'to value: ', width, height );
 
         var zoomFromStandard = window.innerWidth / (1600 ) ;
-        console.log('zoomFromStandard: ', zoomFromStandard);
+        //console.log('zoomFromStandard: ', zoomFromStandard);
         if (zoomFromStandard<0.8) { //} && window.devicePixelRatio<=1) {
             camFOV = 45 / (zoomFromStandard*1.4);
             if (portrait) camFOV = 45 / (zoomFromStandard*1.1)
@@ -4111,7 +4220,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             rloop.camera.fov = camFOV;
         }
         //if (window.devicePixelRatio > 1 && !rloop.mobile) defaultPixedSize = defaultPixedSize / 2;
-        console.log('cam fov: ', rloop.camera.fov);
+        //console.log('cam fov: ', rloop.camera.fov);
 
         //document.getElementById('coin').style.
 
