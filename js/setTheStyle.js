@@ -31,11 +31,12 @@ define([], function() {
         set_lines(2);
       }
       var logo_pos = {
-        left: blend(
+        /*left: 5 
+          /*blend(
           pad + 5.19,
           8.503,
           mobility
-        ),
+        , */
         top: blend(
           3.602,
           6.259,
@@ -52,6 +53,7 @@ define([], function() {
           mobility
         ),
       };
+      console.log('')
       set_css('logo', map_pos(logo_pos, len));
       // set_css('logo-click-area', map_pos(expand_pos(
       //   logo_pos, 1.3
@@ -336,7 +338,7 @@ define([], function() {
           mobility
         ))
       });
-      
+
       set_css('bottomTxt211', {
         lineHeight: 1.5,
         fontSize: len(blend(
@@ -518,6 +520,9 @@ define([], function() {
 
   	function set_css(elem_id, style) {
   		//console.log('elem_id:', elem_id);
+      if (elem_id=='logo') {
+        //console.log('logo: ', style);
+      }
 	  var elem = id(elem_id);
 	  for (var prop in style) {
 	    elem.style[prop] = style[prop];

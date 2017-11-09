@@ -31,6 +31,7 @@ body {
     /* added to keep scrollbar while animating */
 
     overflow: hidden;
+    -webkit-overflow-scrolling: auto;
 
     /*color: #000000;
     font-family: Open Sans,sans-serif;
@@ -58,6 +59,10 @@ main {
         opacity: 1;
 
     }
+
+#logo {
+    left: 5vw;
+}
 
     #logo-click-area {
         cursor: pointer;
@@ -232,7 +237,8 @@ main {
 #pag2 {
     background-image: url(../img/bg/section2bg.jpg);
     background-position: center;
-    position: relative;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .left-coin-text {
@@ -802,8 +808,8 @@ main {
 
 .btnArrow {
     position: absolute;
-    width: 4vw;
-    height: 4vw;
+    width: 6vh;
+    height: 6vh;
 
     background: url(../img/btn/arrow.png) no-repeat center center;
     background-size: cover;
@@ -819,19 +825,19 @@ main {
     transition: opacity 0.4s;
 }
 
-#btnArrow:hover {
-    opacity: 1;
+.btnArrow:hover {
+    opacity: 1 !important;
 }
 
 #btnDown {       
-    bottom: 4vw;
+    bottom: 10vh;
     right: 4vw;
     opacity: 0;    
 }
 
 #btnUp {
     right: 4vw;
-    bottom: 10vw;
+    bottom: 20vh;
     opacity: 0;
 
     -ms-transform: rotate(180deg); /* IE 9 */
@@ -840,9 +846,9 @@ main {
 }
 
 .btnHeader {
-    width: 3vw;
-    height: 3vw;
-    margin-right:7px;
+    width: 5vh;
+    height: 5vh;
+    margin-right:13px;
    /* background-color: white;*/
     display: inline-block;
     pointer-events: auto;
@@ -872,8 +878,8 @@ main {
     display: inline-block;
     position: relative;
     font-weight: 300;
-    font-size: 1vw;
-    top:-1vw;
+    font-size: 2vh;
+    top:-1.7vh;
 }
 
 #buttonsCont {
@@ -884,6 +890,10 @@ main {
 }
 
 #watchVideoBtn2{
+    margin-top: 5vh;
+}
+
+#onePagerBtn{
     margin-top: 3vh;
 }
 
