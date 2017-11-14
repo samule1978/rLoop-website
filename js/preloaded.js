@@ -45,7 +45,7 @@ var startloadingall = function(){
 		// On load, this function is run. This could be used to load a single-page app.
     	requirejs(["main"], function(main){
     	    //console.log('starting');
-	        document.getElementById('preloadScreen').style.visibility = 'hidden';
+	        //
     	    main.Init();
 	    });
     });

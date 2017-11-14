@@ -103,6 +103,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     var slides;
     var circleCenter = new THREE.Vector3(15, 0, 0);
     var enableNext = true;
+    var myScroll;
 
     /*** public function ***/
 
@@ -134,15 +135,31 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         //     scrolling = false;
         //     //console.log('stopped scrolling');
         // }
+        rloop.mobile = isMobile;
+        rloop.portrait = portrait;
 
+        //rloop.mobile = true;
         if ( true )
         {
-            scrollMagicController = new ScrollMagic.Controller({
-                globalSceneOptions: {
-                    triggerHook: 'onLeave',
+            if (rloop.mobile)
+            {
+                scrollMagicController = new ScrollMagic.Controller({
+                    container: "#containerScroll",
+                    globalSceneOptions: {
+                        triggerHook: 'onLeave',
 
-                }
-            });            
+                    }
+                }); 
+            }           
+            else {
+                scrollMagicController = new ScrollMagic.Controller({
+                    //container: "#containerScroll",
+                    globalSceneOptions: {
+                        triggerHook: 'onLeave',
+
+                    }
+                });            
+            }
 
             slides = document.querySelectorAll("section.pageClass")
             
@@ -150,11 +167,10 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                 var s =new ScrollMagic.Scene({
                         triggerElement: slides[i]
                     })
-                    .setPin(slides[i])
-                    //.addIndicators() // add indicators (requires plugin)
+                    .setPin(slides[i])                    
                     .on('enter', function (e){
                         //leavingScene( e );
-                        
+                        //console.log('entered')
                         startScene( e );
                     })
                     .on('start' , function (e){
@@ -164,51 +180,78 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         progressInScene()
                     })
                     .on('update', function (e) {
+                        //console.log('should update...')
                         var currentMoving = parseInt($(e.target.triggerElement()).attr('id').split('pag')[1]) - 1;
                         //console.log('current moving: ', currentMoving, 'current stage: ', currentStage)
                         if (currentMoving != currentStage) return;
                         sliderUpdate(e);
-
-                        // var timer2 = setTimeout ( function (){
-                        //     if (!scrolling)
-                        //     {
-                                
-                        //         //console.log('update, ',e);
-                        //     }
-                        // }, 100);                    
+                                       
                     } )
                     .on('shift', function(e){
                         //console.log('shifted: ', $(e.target.triggerElement()).attr('id') );
                     })
-                    .addTo(scrollMagicController);
-                slidesScenes.push(s);
+                    .addTo(scrollMagicController)
+
+                    if (!rloop.mobile) s.addIndicators();
+
+                    slidesScenes.push(s);
             }
 
-            // scrollMagicController.scrollTo( function(newpos){
 
-            //     console.log('section to scroll to: ', $('#'+newpos));
-            //     // new TWEEN.Tween(window)
-            //     //     .to({scrollTo:{y:newpos}});
+            if (rloop.mobile) 
+            {
+                myScroll = new IScroll('#containerScroll', {
+                    scrollX: false,
+                    // but do scroll vertical
+                    scrollY: true,
+                    // show scrollbars
+                    scrollbars: false,
+                    snap: false,
+                    // deactivating -webkit-transform because pin wouldn't work because of a webkit bug: https://code.google.com/p/chromium/issues/detail?id=20574
+                    // if you dont use pinning, keep "useTransform" set to true, as it is far better in terms of performance.
+                    useTransform: false,
+                    // deativate css-transition to force requestAnimationFrame (implicit with probeType 3)
+                    useTransition: false,
+                    // set to highest probing level to get scroll events even during momentum and bounce
+                    // requires inclusion of iscroll-probe.js
+                    probeType: 3,
+                    // pass through clicks inside scroll container
+                    click: true 
+                    }
+                );
 
-            // });
+
+                scrollMagicController.scrollPos(function(){
+                    return -myScroll.y;
+                });
+
+                myScroll.on('scroll', function(){
+                    scrollMagicController.update();
+                })
+                    //s.addIndicators({parent: '.container'})
+                    //console.log('myScroll: ', myScroll);            
+                // scrollMagicController.scrollTo( function(newpos){
+                //     //console.log('trying to scroll to position:', newpos);
+                //     //myScroll.scrollTo(0, newpos, 1000)
+                // });
+            }
 
             scrollMagicController.enabled(false);
         }
 
         setTheStyle.set_layout();
-        console.log('runnging');
+        //console.log('runnging');
         //return;
 
 
-        rloop.mobile = isMobile;
-        rloop.portrait = portrait;
+        
 
         rloop.scene = new THREE.Scene();
         container = document.getElementById("webGLContent");
         width = container.clientWidth;
         height = container.clientHeight;
 
-        let imageAssets = [
+        var imageAssets = [
             { name: 'step1', url:'theraceison.png'},
             { name: 'step2', url:'hyperloop.png'},
             { name: 'step3', url:'earthmap.png'}
@@ -245,14 +288,17 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         prevValue.height = window.innerHeight;
 
         clock = new THREE.Clock();
-
         var zoomFromStandard = window.innerWidth / (1600 ) ;
+        /*
+        
         //console.log('zoomFromStandard: ', zoomFromStandard);
         if (zoomFromStandard) { //} && window.devicePixelRatio<=1) {
             //camFOV = 45 / (zoomFromStandard*1.2);
             if (portrait) camFOV = 45 / (zoomFromStandard*1.1);
             else camFOV =  50 / (zoomFromStandard*1.0);
         }
+        */
+
         //if (window.devicePixelRatio > 1 && !rloop.mobile) defaultPixedSize = defaultPixedSize / 2;
         //console.log('default pixel size: ', defaultPixedSize)
         //defaultPixedSize = 1;
@@ -261,7 +307,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         //     defaultPixedSize = defaultPixedSize / 1.5;  
         // } 
 
-        //defaultPixedSize = defaultPixedSize * zoomFromStandard;
+        defaultPixedSize = defaultPixedSize * (zoomFromStandard*1.2);
+        if (zoomFromStandard>1 || rloop.mobile) defaultPixedSize = 1;
         //rloop.scene.add(iconSprites);
 
         //cubeContainer = new THREE.Object3D();
@@ -406,7 +453,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     runTimer();                    
                 }
                 else return;
-                console.log('goin to: ', nextPage);
+                //console.log('goin to: ', nextPage);
                 if (gotoPageAndFade(nextPage, currentPage)) currentPage = nextPage;
             }
             //console.log('scroll event: ', event);
@@ -434,10 +481,10 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         });
 
         document.addEventListener('scroll', function(event){
-            
-            event.preventDefault();
-            //var nextPage;
             //console.log('event: ', event);
+            //event.preventDefault();
+            //var nextPage;
+            
             // if (event.deltaY > 0)
             // {
             //     nextPage = currentPage + 1 < slides.length ? currentPage+1 : -1;
@@ -1033,14 +1080,14 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     {
         if (event.scrollDirection!="PAUSED")
             currentStage = parseInt($(event.target.triggerElement()).attr('id').split('pag')[1]) - 1;
-        //console.log('leaving scene with event: ', event)
+        //console.log('start scene with event: ', currentStage)
     }
 
     function leavingScene(event)
     {
-        if (event.scrollDirection == 'REVERSE')
+        if (event.scrollDirection == 'REVERSE' && event.scrollDirection!="PAUSED")
             currentStage = parseInt($(event.target.triggerElement()).attr('id').split('pag')[1]) - 2;
-        //console.log('leaving scene with event: ', event)
+        //console.log('leaving scene with event: ', currentStage)
     }
 
     function progressInScene( scene )
@@ -1055,7 +1102,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         $('.section-tranz').each(function(){
             if (this.style.opacity>0)
             {
-                console.log('this: ', this);
+                //onsole.log('this: ', this);
                 if (idArray.indexOf(this.id)>=0) {
                     //exclude this one
                 } else {
@@ -1183,7 +1230,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
     function gotoPageAndFade ( goTo, goFrom )
     {
-        
+        //console.log('trying to go to page: ', goTo);
         var btnUp = document.getElementById('btnUp');
         var btnDown = document.getElementById('btnDown');
 
@@ -1220,28 +1267,54 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         //var topPos = d.offsetTop;
         //scrollMagicController.scrollTo(sectionIdTo);
         var scrollDist = goTo * window.innerHeight ;
-        //console.log('scroll dist: ', scrollDist) ;
+       // console.log('scroll dist: ', scrollDist) ;
 
         //var scrollFrom = {y: document.documentElement.scrollTop};
         var scrollFrom = {y: window.scrollY};
-        //console.log('scrolling from: ', window.scrollY);
+        if (window.pageYOffset) scrollFrom.y = window.pageYOffset;
+        //console.log('scrolling from: ', scrollFrom, ' to ', d);
         tweeningPageAvailable = false;
+        //console.log('pageTween: ', pageTween);
         if (pageTween) {
             pageTween.stop();
             pageTween = null;
             return false;
         } else {
-            pageTween = new TWEEN.Tween(scrollFrom)
-             .to({y:d}, 1000)
-             .easing( TWEEN.Easing.Cubic.Out )
-             .onUpdate(function(){
-                //console.log('this: ', this._object.y);
-                window.scrollTo(0, this._object.y);
-             })
-             .onComplete(function(){
-                pageTween = null;
-             })
-             .start();
+            var speed = 1000;
+            var ease = TWEEN.Easing.Quadratic.InOut;
+            if (rloop.portrait) speed = 1500;
+            //console.log('starting tween!!', rloop.mobile);
+             if (rloop.mobile) {
+                // /console.log('should be scrolling to: ', myScroll )
+                //console.log('trying to scroll to on mobile: ', - d );
+                myScroll.scrollTo(0, - d, 1000);
+                    
+            } else {
+                pageTween = new TWEEN.Tween(scrollFrom)
+                 .to({y:d}, speed)
+                 .easing( ease )
+                 .onUpdate(function(){
+                    //console.log('updating...', rloop.mobile)
+                    //if (rloop.portrait) window.scrollTo(parseInt(this._object.y), 0);
+                    //else                 
+                   
+                    window.setTimeout(scrollToValue.bind(null, this._object.y), 0);
+                    
+                    //window.scrollTo(0, this._object.y);
+                    // if (rloop.mobile) {
+                    //     document.body.scrollTop(this._object.y;
+                    //     console.log('offset: ', window.pageYOffset) ;
+                    // } 
+                    //setTimeout(scrollToValue(this._object.y), 10);
+                        
+                    
+                    //console.log('window.scrollTo: ', window.scrollTo)
+                 })
+                 .onComplete(function(){
+                    pageTween = null;
+                 })
+                 .start();
+             }
 
             return true;
         }
@@ -1250,15 +1323,33 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         // }
     }
 
+    //function scroll
+
+    function scrollToValue(val)
+    {
+        // if($('body').scrollTop()!=val){
+        //     $('body').scrollTop(val);         //Chrome,Safari
+        // }else{
+        //     if($('html').scrollTop()!=val){    //IE, FF
+        //         $('html').scrollTop(val);
+        //     }
+        // } 
+        //console.log('scrollting controller to: ', val);
+        scrollMagicController.scrollTo(val);
+        //scrollMagicController.update();
+        //window.scrollTo(0, val);
+    }
 
     var neededActive = ['0','0','0','0'];
     function sliderUpdate ( event )
     {
         //groupA.removeAll();
+
         var sectionHeight = $(event.target.triggerElement())[0].clientHeight;
-        //console.log('event: ', event, sectionHeight);
+        //console.log('event: ', event.scrollPos, sectionHeight);
         //var currentStage = parseInt($(e.target.triggerElement()).attr('id').split('pag')[1]) - 1;
         var scrollPercentInStage = (event.scrollPos - sectionHeight*currentStage) / sectionHeight;
+        if (rloop.mobile ) scrollPercentInStage = Math.abs((-event.scrollPos + sectionHeight*currentStage) / sectionHeight);
         var dif = event.scrollPos - prevValue2
         var direction = (dif > 0) ? 'down' : 'up';
         prevValue2 = event.scrollPos;
@@ -1276,7 +1367,10 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                 // }
             }
         });
-        //console.log(currentStage);
+
+
+
+        //console.log(currentStage , ' ---- ', scrollPercentInStage);
         
         switch (currentStage)
         {
@@ -1338,7 +1432,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         
                         //coinObject.rotation.y = -Math.PI/14;
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, new THREE.Vector3(0,-Math.PI/14,0));
-                        tweenToGeometryFromRandom(rloop.geometriesArray[2],0, executeAfterLoadingCircle);
+                        executeAfterLoadingCircle();
+                        tweenToGeometryFromRandom(rloop.geometriesArray[2],0, null);
                         //return;
                     }
                 }
@@ -1363,7 +1458,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
                         var fPartRot = new THREE.Vector3(0,-Math.PI/14,0);
                         tweenCameraAndGeometryToPositions(cameraInitialPosition, cameraLookAtNeutral, bufferInitialPosition, fPartRot);
-                        tweenToGeometryFromRandom(rloop.geometriesArray[2],0, executeAfterLoadingCircle);
+                        executeAfterLoadingCircle();
+                        tweenToGeometryFromRandom(rloop.geometriesArray[2],0, null);
                         //return;
                     }
                 }
@@ -1416,6 +1512,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep<3.1 && direction=='down')
                     {          
                         rloop.animationStep = 3.1; 
+                        executeAfterExitCircle();
                         neededActive = ['txtTitl3', 'mainTxt3' , 'bottomTxt3', '0' ];
                         if (steps[1].anim2) steps[1].anim2.stop();
                         steps[1].anim2 = tweenOpacityTo('mainTxt3', 1, 0).start().onComplete(function(){steps[1].anim2 = null});
@@ -1628,6 +1725,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     if (rloop.animationStep<5.1 && direction=='down')
                     {          
                         rloop.animationStep = 5.1; 
+                        tweenIconsOut();
                         neededActive = ['txtTitl5', 'mainTxt5' , 'bottomTxt5', 'onePagerBtn' ];
                         if (steps[3].anim2) steps[3].anim2.stop();                        
                         steps[3].anim2 = tweenOpacityTo('mainTxt5', 1, 0).start().onComplete(function(){steps[3].anim2 = null});
@@ -2028,7 +2126,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
                         if (steps[8].anim3) steps[8].anim3.stop();                                           
                         steps[8].anim3 = tweenOpacityTo('bottomTxt10', 1, 0).start().onComplete(function(){steps[8].anim3 = null});
-
+                        tweenIconsOutAllStep2();
                         if (steps[8].anim4) steps[8].anim4.stop();                                           
                         steps[8].anim4 = tweenOpacityTo('roadmapBtn', 1, 0).start().onComplete(function(){steps[8].anim4 = null});
                         var fPartPoz = new THREE.Vector3(35,-2,-60);
@@ -2073,10 +2171,6 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                         neededActive = ['txtTitl11', 'mainTxt11' , 'bottomTxt11', 'txtTitl10' ];
                         if (steps[8].anim1) steps[8].anim1.stop();
                         steps[8].anim1 = tweenOpacityTo('txtTitl10', 1, 0).start().onComplete(function(){steps[8].anim1 = null});
-
-                        
-
-                       
 
                         if (steps[9].anim2) steps[9].anim2.stop();                        
                         steps[9].anim2 = tweenOpacityTo('mainTxt11', 0, 0).start().onComplete(function(){steps[9].anim2 = null});
@@ -2489,7 +2583,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                 break;
 
         }
-        TWEEN.update();
+        //TWEEN.update();
         // verifica daca sunt cele corecte:
         //console.log('needed active: ', neededActive)
         $('.section-tranz').each(function(){
@@ -2563,18 +2657,18 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
             new TWEEN.Tween(iconSprites[j].material, groupB)
                 .to({opacity:1}, 300)
-                .delay(j*300)
+                .delay(j*100)
                 .start();
 
             new TWEEN.Tween(iconSprites[j].scale, groupB)
-                .to({x:1.3, y:1.3, z:1.3}, 800)
-                .delay(j*300)
+                .to({x:1.3, y:1.3, z:1.3}, 400)
+                .delay(j*100)
                 .easing( TWEEN.Easing.Bounce.Out )
                 .start();
 
             new TWEEN.Tween(textGeomsArray[j].t1.material, groupB)
-                .to({opacity:1}, 800)
-                .delay(j*300 + 1500)
+                .to({opacity:1}, 400)
+                .delay(j*100 + 500)
                 .start();
         }
         //console.log('object sprites: ', iconObject);
@@ -2939,6 +3033,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     }    
 
     function tweenIconsOut() {
+        //console.log('all out!');
         groupB.removeAll();
         for (var j = 0; j<iconSprites.length;j++)
         {            
@@ -3010,28 +3105,41 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
     var coinTween;
     var coinIsIn = false;
     function executeAfterLoadingCircle() {
+        // coinObject.visible = true;
+        // coinObject.rotation.y = -Math.PI/14;
+
+        
         if (coinTween) coinTween.stop();
         coinTween = null; 
         coinIsIn = true;  
-        coinObject.visible = true;
+        //coinObject.visible = true;
         //console.log('coin tween: ', coinObject.rotation);
         coinTween = new TWEEN.Tween(coinObject.rotation )
-            .to({y: -Math.PI/14}, 1045)
+            .to({y: -Math.PI/14}, 900)
             .easing( TWEEN.Easing.Elastic.Out )
+            .delay(1000)
+            .onStart(function(){
+                coinObject.visible = true;
+            })
             .onComplete(function(){
                 coinTween = null;
             })
             .start();
+
+        
     }
 
     function executeAfterExitCircle() {
+        //coinObject.visible = false;
+        //coinObject.rotation.y = Math.PI/2 - Math.PI/11.25 + Math.PI;
+
         if (coinTween) coinTween.stop();
         coinIsIn = false;
         coinTween = null;   
         //console.log('coin tween out: ', coinObject.rotation);
 
         coinTween = new TWEEN.Tween(coinObject.rotation)
-            .to({y: Math.PI/2 - Math.PI/11.25 + Math.PI}, 500)           
+            .to({y: Math.PI/2 - Math.PI/11.25 + Math.PI}, 600)           
             .onComplete(function(){
                 //console.log('ready out!')
                 coinObject.visible = false;
@@ -3335,6 +3443,10 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     colors[this._object.i*3 + 1] = this._object.g;
                     colors[this._object.i*3 + 2] = this._object.b;
 
+                    this._object.color.r = this._object.r;
+                    this._object.color.g = this._object.g;
+                    this._object.color.b = this._object.b;
+
                     rloop.bufferParticles.geometry.attributes.alpha.array[this._object.i] = this._object.alpha;
                     rloop.bufferParticles.geometry.attributes.size.array[this._object.i] = this._object.size;
 
@@ -3441,16 +3553,25 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             var dest2 = {
                 x:dest.x,
                 y:dest.y,
-                z:dest.z
+                z:dest.z,
+
+                r : part.color.r,
+                g : part.color.g,
+                b : part.color.b,
             }
             part.i = par;
+
+            part.r = part.color.r;
+            part.g = part.color.g;
+            part.b = part.color.b;
             
+            //console.log('part color: ', part);
             //console.log('eroare dupa: ', countUnmarkedForDelete);
             
 
             //console.log('going to x: ', dest);
             var t = new TWEEN.Tween(part , groupPoints)
-                .to({x:dest.x, y:dest.y, z:dest.z, alpha:dest.alpha, size: dest.size}, part.speed * 60000)
+                .to({x:dest.x, y:dest.y, z:dest.z, alpha:dest.alpha, size: dest.size, r: dest2.r, g: dest2.g, b: dest2.b}, part.speed * 60000)
                 .delay(wait)
                 .easing( TWEEN.Easing.Cubic.InOut )
                 .interpolation( TWEEN.Interpolation.Bezier )
@@ -3461,12 +3582,21 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     positions[this._object.i*3 + 0] = rloop.particles.geometry.vertices[this._object.i].x;
                     positions[this._object.i*3 + 1] = rloop.particles.geometry.vertices[this._object.i].y;
                     positions[this._object.i*3 + 2] = rloop.particles.geometry.vertices[this._object.i].z;
+                    this._object.color.r = this._object.r;
+                    this._object.color.g = this._object.g;
+                    this._object.color.b = this._object.b;
+
+                    var colors = rloop.bufferParticles.geometry.attributes.customColor.array;
+                    colors[this._object.i*3 + 0] = this._object.r;
+                    colors[this._object.i*3 + 1] = this._object.g;
+                    colors[this._object.i*3 + 2] = this._object.b;
 
                     rloop.bufferParticles.geometry.attributes.alpha.array[this._object.i] = this._object.alpha;
                     rloop.bufferParticles.geometry.attributes.size.array[this._object.i] = this._object.size;
 
                     rloop.bufferParticles.geometry.attributes.alpha.needsUpdate = true;
                     rloop.bufferParticles.geometry.attributes.size.needsUpdate = true;
+                    rloop.bufferParticles.geometry.attributes.customColor.needsUpdate = true;
 
                     
                 })
@@ -3671,7 +3801,16 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                                         document.getElementById('main').style.display = 'block';
 
                                         document.getElementById('btnDown').style.opacity = 0.65;
+                                        document.getElementById('btnDown').style.pointerEvents = 'auto';
                                         scrollMagicController.enabled(true);
+
+
+
+
+                                        
+                                        setTimeout(function () { if (myScroll) myScroll.refresh(); }, 100);
+                                        
+                                        //console.log('magic scroller should be enabled now!')
                                         addWheelEventsAfterStep1();
                                         addEvents();
 
@@ -3921,7 +4060,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
                     vert.destination = {
                         x: x - imgData.width / 2,
                         y: -y + imgData.height / 2,
-                        z: -5
+                        z: -10
                     }
                     vert.alpha = 1;
                     // vert.x = vert.destination.x;
@@ -4207,7 +4346,7 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
         //console.log('running timer')
         var tim = setTimeout(function(){
             enableNext = true;
-        }, 1550);
+        }, 1750);
     }
 
     function onWindowResize(){
@@ -4262,6 +4401,8 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
 
         var zoomFromStandard = window.innerWidth / (1600 ) ;
         //console.log('zoomFromStandard: ', zoomFromStandard);
+
+        /*
         if (zoomFromStandard) { //} && window.devicePixelRatio<=1) {
             //camFOV = 45 / (zoomFromStandard*1.2);
             if (portrait) camFOV = 45 / (zoomFromStandard*1.1);
@@ -4273,8 +4414,20 @@ define(["setTheStyle", "../lib/three.js/three", "../lib/three.js/orbitControls",
             rloop.camera.fov = camFOV;
             rloop.camera.updateProjectionMatrix();
         }
+        */
+
+        if (zoomFromStandard<1) { //} && window.devicePixelRatio<=1) {
+            camFOV = 45 / (zoomFromStandard*1.1);
+            if (portrait) camFOV = 45 / (zoomFromStandard*1.1)
+            //defaultPixedSize = 1 * (zoomFromStandard * 1.8);
+            //if (defaultPixedSize>1) defaultPixedSize = 1;
+
+            rloop.camera.fov = camFOV;
+            //rloop.camera.aspect = th.width / th.height;
+            rloop.camera.updateProjectionMatrix();
+        }
         //if (window.devicePixelRatio > 1 && !rloop.mobile) defaultPixedSize = defaultPixedSize / 2;
-        //console.log('cam fov: ', rloop.camera.fov, 'zoom from standard: ', zoomFromStandard);
+        console.log('cam fov: ', rloop.camera.fov, 'zoom from standard: ', zoomFromStandard);
 
         //document.getElementById('coin').style.
 
