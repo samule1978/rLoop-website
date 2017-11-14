@@ -341,14 +341,14 @@ define([], function() {
         ))
       });
 
-      set_css('bottomTxt211', {
-        lineHeight: 1.5,
-        fontSize: len(blend(
-          1.4,
-          3.0,
-          mobility
-        ))
-      });
+      // set_css('bottomTxt211', {
+      //   lineHeight: 1.5,
+      //   fontSize: len(blend(
+      //     1.4,
+      //     3.0,
+      //     mobility
+      //   ))
+      // });
 
       set_css('txtTitl12', {
         lineHeight: 2.25,
