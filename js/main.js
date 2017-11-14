@@ -7,7 +7,7 @@ define(["rloop"], function(rloop){
     var width, height;
     var isMobile = false; //initiate as false
     var portrait = false;
-
+    var started = false;
     /***public functions***/
 
     main.Init = function(){
@@ -29,6 +29,7 @@ define(["rloop"], function(rloop){
         } else {    
             document.getElementById('preloadScreen').style.visibility = 'hidden';
             rloop.PreInit(isMobile, portrait);//, data);
+            started = true;
         }
         window.addEventListener('resize', checkOrientation);
     };
@@ -107,7 +108,7 @@ define(["rloop"], function(rloop){
         }
     }
 
-    function checkOrientation() {
+    function checkOrientation(e) {
         if(window.innerHeight > window.innerWidth){
             portrait = true;
         } else portrait = false;
@@ -117,7 +118,15 @@ define(["rloop"], function(rloop){
             document.getElementById('logoinMiddle').style.visibility = 'hidden';
             document.getElementById('plsRotateText').style.display = 'none';
             document.getElementById('preloadScreen').style.visibility = 'hidden';
-            rloop.PreInit(isMobile, portrait);//, data);
+            if (!started) rloop.PreInit(isMobile, portrait);//, data);
+            started = true;
+        } else {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('logoinMiddle').style.visibility = 'visible';
+            document.getElementById('plsRotateText').style.display = 'block';
+            document.getElementById('preloadScreen').style.visibility = 'visible';
+
         }
     } 
 

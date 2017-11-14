@@ -900,3 +900,24 @@ main {
 .inputBtn{
     cursor: pointer;
 }
+
+@media only screen and (max-device-width: 1024px) and (orientation: landscape),only screen and (device-width: 1024px) and (orientation: landscape)
+{ 
+
+    /* extra mobile code */
+    .btnArrow {
+        width: 9vh;
+        height: 9vh;
+    }
+    #btnDown {       
+        bottom: 7vh;          
+    }
+
+    #btnUp {
+        bottom: 19vh;
+    }
+
+    .btnArrow:hover {
+        
+    }
+}
