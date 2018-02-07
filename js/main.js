@@ -1,6 +1,8 @@
 define(["rloop"], function(rloop){
     
     var main = {};
+    
+    /***samg***/
 
     /***private fields***/
 
